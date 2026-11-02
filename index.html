@@ -196,6 +196,11 @@ kbd { font-family: var(--body); font-size: 13px; font-weight: 700; background: v
 .note { font-size: 13px; color: var(--muted); }
 @media (prefers-reduced-motion: reduce) { .pop { animation: none; opacity: 0; } h1 { text-shadow: none; } }
 
+/* Selector d'idioma */
+.lang-pick { display: inline-flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+.lang-pick button { border: 0; border-radius: 0; padding: 7px 14px; font-size: 14px; background: var(--panel); color: var(--muted); }
+.lang-pick button[aria-pressed="true"] { background: var(--amber); color: #1a1430; }
+
 </style>
 </head>
 <body>
@@ -204,32 +209,33 @@ kbd { font-family: var(--body); font-size: 13px; font-weight: 700; background: v
 
   <!-- PORTADA -->
   <section class="screen on" id="scr-start" aria-labelledby="t-start">
-    <div class="row"><span class="chip amber">MP 1665 · RA2 · Tecnologies habilitadores digitals</span></div>
-    <h1 id="t-start">La Torre d'en Fum</h1>
+    <div class="row"><span class="chip amber" data-i18n="chipTop">MP 1665 · RA2 · Tecnologies habilitadores digitals</span><span class="spacer"></span>
+      <div class="lang-pick" role="group" aria-label="Idioma / Idioma"><button type="button" data-lang="ca" aria-pressed="true">Català</button><button type="button" data-lang="es" aria-pressed="false">Castellano</button></div></div>
+    <h1 id="t-start" data-i18n="gameTitle">La Torre d'en Fum</h1>
     <div class="start-grid">
       <div class="panel" style="display:flex;flex-direction:column;gap:12px">
-        <p class="lead">En Fum ha obert FumTech, una consultora que ven «tecnologia miraculosa» a les pimes del Prat. Ocupa una torre de vuit plantes i a cada planta hi ha una trampa.</p>
-        <p>Puja planta a planta fent servir el que saps del RA2: productes i serveis nous, mercats nous, sostenibilitat, negoci o planta, abans → després i l'informe de tecnologies. Al terrat t'espera en Fum.</p>
+        <p class="lead" data-i18n="lead">En Fum ha obert FumTech, una consultora que ven «tecnologia miraculosa» a les pimes del Prat. Ocupa una torre de vuit plantes i a cada planta hi ha una trampa.</p>
+        <p data-i18n="lead2">Puja planta a planta fent servir el que saps del RA2: productes i serveis nous, mercats nous, sostenibilitat, negoci o planta, abans → després i l'informe de tecnologies. Al terrat t'espera en Fum.</p>
         <div class="fum-card">
           <svg viewBox="0 0 96 96" width="96" height="96" aria-hidden="true" id="fum-big"></svg>
-          <p class="muted">«Posa'm blockchain a tot arreu, que queda modern!» · en Fum</p>
+          <p class="muted" data-i18n="fumQuote">«Posa'm blockchain a tot arreu, que queda modern!» · en Fum</p>
         </div>
       </div>
       <form class="panel" id="f-start" style="display:flex;flex-direction:column;gap:12px" novalidate>
-        <h2>Fitxa del jugador</h2>
+        <h2 data-i18n="playerCard">Fitxa del jugador</h2>
         <div class="form-grid">
-          <div><label for="in-name">Nom i cognoms</label><input id="in-name" autocomplete="name" maxlength="60" required></div>
-          <div><label for="in-group">Grup</label>
+          <div><label for="in-name" data-i18n="nameLabel">Nom i cognoms</label><input id="in-name" autocomplete="name" maxlength="60" required></div>
+          <div><label for="in-group" data-i18n="groupLabel">Grup</label>
             <select id="in-group" required>
-              <option value="">Tria…</option>
-              <option>AFI1</option><option>CI1</option><option>GAT1</option><option>MK1A</option><option>MK1B</option><option>TR1</option><option>Altres</option>
+              <option value="" data-i18n="choose">Tria…</option>
+              <option>AFI1</option><option>CI1</option><option>GAT1</option><option>MK1A</option><option>MK1B</option><option>TR1</option><option value="Altres" data-i18n="other">Altres</option>
             </select>
           </div>
         </div>
         <p class="err" id="start-err" role="alert"></p>
-        <button type="submit" class="primary" id="b-start">Entra a la torre</button>
+        <button type="submit" class="primary" id="b-start" data-i18n="enter">Entra a la torre</button>
         <button type="button" id="b-continue" style="display:none">Continua la partida desada</button>
-        <p class="note">La partida es desa en aquest navegador. Al final descarregaràs un informe en PDF amb els teus resultats.</p>
+        <p class="note" data-i18n="saveNote">La partida es desa en aquest navegador. Al final descarregaràs un informe en PDF amb els teus resultats.</p>
       </form>
     </div>
   </section>
@@ -237,18 +243,19 @@ kbd { font-family: var(--body); font-size: 13px; font-weight: 700; background: v
   <!-- TORRE -->
   <section class="screen" id="scr-map" aria-labelledby="t-map">
     <div class="row">
-      <h2 id="t-map">La torre</h2>
+      <h2 id="t-map" data-i18n="tower">La torre</h2>
       <span class="spacer"></span>
-      <button type="button" id="b-help">Com es juga</button>
+      <button type="button" id="b-help" data-i18n="help">Com es juga</button>
+      <button type="button" id="b-lang">Castellano</button>
       <button type="button" id="b-sound" aria-pressed="true">So: sí</button>
     </div>
     <div class="panel summary" id="summary"></div>
     <div class="tower" id="tower"></div>
     <div class="row">
-      <button type="button" class="primary" id="b-pdf">Descarrega l'informe PDF</button>
+      <button type="button" class="primary" id="b-pdf" data-i18n="pdfBtn">Descarrega l'informe PDF</button>
       <span class="note" id="pdf-msg"></span>
       <span class="spacer"></span>
-      <button type="button" id="b-reset">Comença de nou</button>
+      <button type="button" id="b-reset" data-i18n="reset">Comença de nou</button>
     </div>
   </section>
 
@@ -257,26 +264,26 @@ kbd { font-family: var(--body); font-size: 13px; font-weight: 700; background: v
     <div class="row"><span class="chip amber" id="intro-chip"></span><span class="chip" id="intro-ca"></span></div>
     <h1 id="t-intro"></h1>
     <p class="lead" id="intro-tag"></p>
-    <div class="panel"><h3>Recorda</h3><ul class="recap" id="intro-recap"></ul></div>
-    <div class="panel"><h3>Controls</h3><div class="keys" id="intro-keys"></div></div>
+    <div class="panel"><h3 data-i18n="recall">Recorda</h3><ul class="recap" id="intro-recap"></ul></div>
+    <div class="panel"><h3 data-i18n="controls">Controls</h3><div class="keys" id="intro-keys"></div></div>
     <div class="row">
-      <button type="button" id="b-intro-back">Torna a la torre</button>
+      <button type="button" id="b-intro-back" data-i18n="back">Torna a la torre</button>
       <span class="spacer"></span>
-      <button type="button" class="primary" id="b-intro-go">Som-hi</button>
+      <button type="button" class="primary" id="b-intro-go" data-i18n="go">Som-hi</button>
     </div>
   </section>
 
   <!-- JOC -->
   <section class="screen" id="scr-game" aria-label="Partida">
     <div class="hud">
-      <div><div class="lbl">Planta</div><div class="val" id="h-floor"></div></div>
-      <div><div class="lbl">Onada</div><div class="val" id="h-wave"></div></div>
-      <div><div class="lbl">Punts</div><div class="val" id="h-score">0</div></div>
-      <div><div class="lbl">Ratxa</div><div class="val combo" id="h-combo">×1</div></div>
-      <div><div class="lbl">Encert</div><div class="val" id="h-acc">–</div></div>
-      <div><div class="lbl">Vides</div><div class="hearts" id="h-lives"></div></div>
+      <div><div class="lbl" data-i18n="hFloor">Planta</div><div class="val" id="h-floor"></div></div>
+      <div><div class="lbl" data-i18n="hWave">Onada</div><div class="val" id="h-wave"></div></div>
+      <div><div class="lbl" data-i18n="hScore">Punts</div><div class="val" id="h-score">0</div></div>
+      <div><div class="lbl" data-i18n="hCombo">Ratxa</div><div class="val combo" id="h-combo">×1</div></div>
+      <div><div class="lbl" data-i18n="hAcc">Encert</div><div class="val" id="h-acc">–</div></div>
+      <div><div class="lbl" data-i18n="hLives">Vides</div><div class="hearts" id="h-lives"></div></div>
       <span class="spacer"></span>
-      <button type="button" id="b-pause">Pausa (P)</button>
+      <button type="button" id="b-pause" data-i18n="pauseBtn">Pausa (P)</button>
     </div>
     <div class="prompt" id="prompt" aria-live="polite"></div>
     <div class="field" id="field"><div class="grid-bg"></div></div>
@@ -715,23 +722,725 @@ const CONTENT = {
 };
 if (typeof module !== 'undefined') module.exports = CONTENT;
 
+// Contenido del juego «La Torre de Fum» · RA2 apartados 3-8 (+10) · MP 1665 (castellano)
+// Misma estructura, mismo orden y mismas respuestas que content.js
+const CONTENT_ES = {
+  floors: [
+    {
+      id: 'p1', num: 1, mode: 'sort',
+      title: '¿Negocio o planta?', ca: '2.5', apt: 'Apartado 6',
+      tagline: 'Las cajas caen de la cinta. Envía cada tecnología o aplicación a la zona donde pesa más.',
+      recap: [
+        'Negocio = entorno IT: la oficina, donde se gestiona información (ventas, contabilidad, clientes).',
+        'Planta = entorno OT: donde pasan las cosas físicas (almacén, hotel, camión) y se mueve, mide o vigila.',
+        'El blockchain casi no toca la planta. La robótica casi no toca el negocio.',
+        'La ciberseguridad, la IA y el gemelo digital pesan mucho en los dos lados a la vez.'
+      ],
+      bins: ['Negocio (IT)', 'Los dos', 'Planta (OT)'],
+      waves: [
+        { count: 18, speed: 1, pool: 'a' },
+        { count: 20, speed: 1.3, pool: 'b' },
+        { count: 22, speed: 1.6, pool: 'all' }
+      ],
+      items: [
+        { p: 'a', t: 'Blockchain', a: 0, e: 'El blockchain pesa en el negocio: da confianza entre las empresas de una cadena. Casi no toca la planta.' },
+        { p: 'a', t: 'Cloud computing', a: 0, e: 'La nube pesa mucho en el negocio (IT). A la planta llega con el edge computing.' },
+        { p: 'a', t: 'Big data y analítica', a: 0, e: 'El big data pesa sobre todo en el negocio: clientes, previsión de demanda, precios, fraude.' },
+        { p: 'a', t: 'Inteligencia artificial', a: 1, e: 'La IA pesa en los dos lados: en el negocio (precios, facturas, clientes) y en la planta (visión artificial, mantenimiento predictivo).' },
+        { p: 'a', t: 'Ciberseguridad', a: 1, e: 'La ciberseguridad pesa mucho en los dos lados. En la planta, la prioridad es que nada se pare y que nadie se haga daño.' },
+        { p: 'a', t: 'Gemelo digital', a: 1, e: 'El gemelo digital une IT y OT: necesita datos de la planta y sistemas de negocio para decidir.' },
+        { p: 'a', t: 'Internet de las cosas (IoT)', a: 2, e: 'El IoT pesa sobre todo en la planta: vigilar máquinas, alarmas, mantenimiento predictivo, trazabilidad.' },
+        { p: 'a', t: 'Conectividad 5G', a: 2, e: 'El 5G pesa en la planta: muchos sensores a la vez, robots móviles, flotas de vehículos.' },
+        { p: 'a', t: 'Robótica y cobots', a: 2, e: 'La robótica pesa en la planta. En el negocio solo se nota porque baja el coste de cada unidad.' },
+        { p: 'a', t: 'CRM en la nube para seguir a los clientes', a: 0, e: 'Un CRM gestiona información de clientes: es negocio (IT).' },
+        { p: 'a', t: 'Sonda de temperatura dentro del camión frigorífico', a: 2, e: 'La sonda mide una magnitud del mundo físico: es planta (OT).' },
+        { p: 'a', t: 'Robot de almacén que lleva la estantería al trabajador', a: 2, e: 'Mueve objetos físicos en el almacén: es planta (OT).' },
+        { p: 'a', t: 'Cuadro de mando con indicadores en tiempo real', a: 0, e: 'Presenta información para decidir: es negocio (IT).' },
+        { p: 'a', t: 'Cerraduras electrónicas y domótica de la habitación', a: 2, e: 'Actúan sobre cosas físicas del hotel: es planta (OT).' },
+        { p: 'b', t: 'Revenue management: el precio de la habitación cambia según la demanda', a: 0, e: 'Ajustar precios es una decisión de negocio (IT), aunque la tome una IA.' },
+        { p: 'b', t: 'Una IA lee las facturas en PDF y un RPA las introduce en el ERP', a: 0, e: 'Trata documentos de oficina: es negocio (IT).' },
+        { p: 'b', t: 'Analizar millones de tiques para decidir qué se pone en oferta', a: 0, e: 'Analizar ventas para decidir es negocio (IT).' },
+        { p: 'b', t: 'Certificar el origen de un lote de café entre varias empresas', a: 0, e: 'Es blockchain al servicio de la relación entre empresas: negocio.' },
+        { p: 'b', t: 'Programa de facturación en línea', a: 0, e: 'Gestiona información económica: negocio (IT).' },
+        { p: 'b', t: 'Previsión de demanda para la campaña de Navidad', a: 0, e: 'Prever ventas es una tarea de negocio (IT).' },
+        { p: 'b', t: 'Detectar fraude en los pagos de los clientes', a: 0, e: 'El fraude en pagos es un problema de negocio (IT).' },
+        { p: 'b', t: 'Sensores de vibración en una máquina de la línea', a: 2, e: 'Vigilan una máquina real: es planta (OT).' },
+        { p: 'b', t: 'Cobot que ayuda a preparar los pedidos', a: 2, e: 'Hace un trabajo físico junto a las personas: planta (OT).' },
+        { p: 'b', t: 'AGV que lleva palés por el almacén', a: 2, e: 'Un vehículo autónomo que mueve palés es planta (OT).' },
+        { p: 'b', t: 'Grúas y camiones del puerto conectados con una red 5G propia', a: 2, e: 'Conecta aparatos físicos del recinto: planta (OT).' },
+        { p: 'b', t: 'Imprimir en 3D un recambio en el taller cuando hace falta', a: 2, e: 'Fabricar una pieza es un trabajo de planta (OT).' },
+        { p: 'b', t: 'Gafas de realidad aumentada que guían al técnico de mantenimiento', a: 2, e: 'El mantenimiento guiado pasa en la planta, delante de la máquina (OT).' },
+        { p: 'b', t: 'Precinto electrónico que avisa si se abre el contenedor', a: 2, e: 'Vigila un objeto físico durante el viaje: planta (OT).' },
+        { p: 'b', t: 'Contador de visitantes en la puerta de la tienda', a: 2, e: 'Mide personas que entran en el local: planta (OT).' },
+        { p: 'b', t: 'Gemelo del almacén para probar una nueva distribución antes de mover nada', a: 1, e: 'Usa datos de la planta para tomar una decisión de negocio: los dos.' },
+        { p: 'b', t: 'Doble factor en el correo y red de la planta separada por zonas', a: 1, e: 'Es ciberseguridad en la oficina y en la planta a la vez: los dos.' },
+        { p: 'b', t: 'Un chat responde a clientes y una cámara detecta piezas defectuosas', a: 1, e: 'Es IA en el negocio (clientes) y en la planta (visión artificial): los dos.' },
+        { p: 'b', t: 'Una sola versión de la verdad entre la oficina y la planta', a: 1, e: 'Es una mejora de frontera: une los datos de la planta y los del negocio.' },
+        { p: 'b', t: 'El sistema de planta (MES) y el ERP se pasan los datos', a: 1, e: 'El MES es de planta y el ERP de negocio: la mejora toca los dos.' },
+        { p: 'b', t: 'Proteger la disponibilidad, la integridad y la confidencialidad', a: 1, e: 'Son los tres objetivos de la ciberseguridad, que pesa en los dos lados.' },
+        { p: 'b', t: 'Mantenimiento predictivo que avisa al responsable de compras', a: 1, e: 'Los sensores están en la planta y el aviso llega al negocio: los dos.' }
+      ]
+    },
+    {
+      id: 'p2', num: 2, mode: 'shoot',
+      title: 'Antes → después', ca: '2.6', apt: 'Apartado 7',
+      tagline: 'Bajan problemas «de antes». Dispara la tecnología que los convierte en el «después».',
+      recap: [
+        'Una mejora se explica en dos columnas: antes y después, y siempre diciendo qué tecnología lo hace posible.',
+        'En el entorno IT: nube, indicadores en tiempo real, facturas leídas por IA + RPA, programas que se hablan, doble factor.',
+        'En el entorno OT: sensores en lugar de rondas, mantenimiento predictivo, visión artificial, robots, simulaciones, 5G.',
+        'En la frontera: una sola versión de la verdad, el MES y el ERP se hablan, redes separadas por zonas.'
+      ],
+      ammo: {
+        CLOUD: 'Cloud', BIG: 'Big data', IARPA: 'IA + RPA', CIBER: 'Ciberseguridad', BLOCK: 'Blockchain', IA: 'IA',
+        IOT: 'IoT', IOTIA: 'IoT + IA', ROBOT: 'Robótica', BESSO: 'Gemelo digital', G5: '5G',
+        CLOUDIOT: 'Cloud + IoT', D3: 'Impresión 3D', RARV: 'RA / RV'
+      },
+      waves: [
+        { label: 'Entorno IT · negocio', count: 12, speed: 1, ammo: ['CLOUD', 'BIG', 'IARPA', 'CIBER', 'BLOCK', 'IA'], pool: 'it' },
+        { label: 'Entorno OT · planta', count: 13, speed: 1.2, ammo: ['IOT', 'IOTIA', 'IA', 'ROBOT', 'BESSO', 'G5'], pool: 'ot' },
+        { label: 'Frontera y mezcla', count: 14, speed: 1.4, ammo: ['IOT', 'CLOUDIOT', 'IA', 'BESSO', 'CIBER', 'D3', 'RARV'], pool: 'fr' }
+      ],
+      items: [
+        { p: 'it', t: 'Servidores propios en la oficina', d: 'Servicios en la nube que crecen cuando hace falta', a: 'CLOUD', e: 'Del servidor propio a servicios que crecen o se reducen al momento: es la nube.' },
+        { p: 'it', t: 'Un informe a final de mes', d: 'Indicadores en tiempo real', a: 'BIG', e: 'Pasar del pasado (el informe del mes) al presente es lo que aporta el big data.' },
+        { p: 'it', t: 'Teclear las facturas a mano', d: 'La IA las lee y un robot de software las introduce', a: 'IARPA', e: 'La IA lee la factura y el RPA, un robot de software, la introduce en el programa.' },
+        { p: 'it', t: 'Cada programa va por libre', d: 'Los programas se pasan los datos solos (API)', a: 'CLOUD', e: 'Los servicios en la nube se conectan por API y se pasan los datos solos.' },
+        { p: 'it', t: 'Seguridad = el cortafuegos de la oficina', d: 'Seguridad basada en quién eres (doble factor)', a: 'CIBER', e: 'Entrar con doble factor es ciberseguridad moderna: importa quién eres, no solo dónde estás.' },
+        { p: 'it', t: 'Correos y papeles para demostrar el origen de un lote entre empresas', d: 'Un registro compartido que nadie puede alterar', a: 'BLOCK', e: 'Confianza entre empresas que no se conocen, sin intermediario: blockchain.' },
+        { p: 'it', t: 'Precios del hotel fijos toda la temporada', d: 'El precio se recalcula según la demanda', a: 'IA', e: 'El revenue management usa la IA para ajustar el precio según la demanda.' },
+        { p: 'it', t: 'Una persona responde a mano las mismas preguntas de los clientes', d: 'Un chat responde las preguntas frecuentes', a: 'IA', e: 'Un chat que responde a clientes es IA; una persona supervisa los casos difíciles.' },
+        { p: 'it', t: 'Comprar un servidor nuevo cada vez que crece el trabajo', d: 'Pagar solo por lo que usas', a: 'CLOUD', e: 'Pagar por uso y crecer al momento es la idea de la nube.' },
+        { p: 'it', t: 'Decidir las ofertas por intuición', d: 'Decidir analizando millones de tiques', a: 'BIG', e: 'Analizar tantos tiques que no caben en un Excel es big data.' },
+        { p: 'it', t: 'Contraseñas de todos apuntadas en una hoja', d: 'Gestor de contraseñas y doble factor', a: 'CIBER', e: 'Proteger los accesos es ciberseguridad.' },
+        { p: 'it', t: 'Redactar a mano cada borrador de campaña', d: 'La IA hace el borrador y una persona lo revisa', a: 'IA', e: 'La IA generativa redacta borradores; la supervisión humana sigue siendo necesaria.' },
+        { p: 'ot', t: 'Rondas a pie para revisar las máquinas', d: 'Vigilancia continua con sensores', a: 'IOT', e: 'Los sensores conectados (IoT) vigilan sin que nadie haga la ronda.' },
+        { p: 'ot', t: 'Reparar la máquina cuando se estropea', d: 'Mantenimiento predictivo: reparar antes', a: 'IOTIA', e: 'Los sensores (IoT) dan los datos y la IA predice la avería.' },
+        { p: 'ot', t: 'Revisar la calidad a ojo', d: 'Cámaras que detectan los defectos', a: 'IA', e: 'Detectar defectos con cámaras es visión artificial, una aplicación de la IA.' },
+        { p: 'ot', t: 'Tareas pesadas hechas a mano', d: 'Robots y cobots', a: 'ROBOT', e: 'La robótica quita trabajos repetitivos, pesados o peligrosos.' },
+        { p: 'ot', t: 'Probar los cambios en la planta real', d: 'Simularlos primero', a: 'BESSO', e: 'El gemelo digital permite probar decisiones sin riesgos ni costes reales.' },
+        { p: 'ot', t: 'Zonas del recinto sin buena conexión', d: 'Conexión fiable en todo el recinto', a: 'G5', e: 'El 5G conecta allí donde el cable no llega y el wifi no es suficiente.' },
+        { p: 'ot', t: 'Apuntar a mano la temperatura de las cámaras', d: 'Sondas que envían el dato y avisan al móvil', a: 'IOT', e: 'Una sonda conectada que avisa es IoT.' },
+        { p: 'ot', t: 'Mover estanterías para probar una nueva distribución', d: 'Probarla antes en el gemelo del almacén', a: 'BESSO', e: 'La copia digital del almacén permite probar sin mover nada: gemelo digital.' },
+        { p: 'ot', t: 'Caminar por el almacén a buscar cada producto', d: 'Un robot lleva la estantería al trabajador', a: 'ROBOT', e: 'Un robot de almacén que mueve estanterías es robótica.' },
+        { p: 'ot', t: 'Llamar al conductor para saber dónde está el camión', d: 'El localizador envía la posición solo', a: 'IOT', e: 'Un localizador que envía datos es un objeto conectado: IoT.' },
+        { p: 'ot', t: 'Wifi que no llega a los muelles ni a las grúas', d: 'Red 5G privada en el puerto', a: 'G5', e: 'Conectar miles de aparatos con poca latencia es el punto fuerte del 5G.' },
+        { p: 'ot', t: 'La máquina se para sin aviso y para toda la línea', d: 'Sensores e IA avisan antes de la avería', a: 'IOTIA', e: 'IoT + IA: los datos de los sensores y un modelo que predice la avería.' },
+        { p: 'ot', t: 'Contar a mano los palés que salen', d: 'Una cámara los cuenta y registra cada salida', a: 'IA', e: 'Reconocer y contar objetos con cámara es visión artificial (IA).' },
+        { p: 'fr', t: 'La oficina y la planta tenían cada una sus datos', d: 'Una sola versión de la verdad', a: 'BESSO', e: 'Según la teoría, esto lo hacen posible IoT + edge + gemelo digital: el gemelo reúne los datos de los dos mundos.' },
+        { p: 'fr', t: 'La planificación no sabía qué pasaba en la planta', d: 'El MES y el ERP se hablan', a: 'CLOUDIOT', e: 'Cloud + IoT: los datos de planta llegan al sistema de gestión.' },
+        { p: 'fr', t: 'Conectarlo todo abría puertas a los ataques', d: 'Redes separadas por zonas y vigiladas', a: 'CIBER', e: 'Separar la red en zonas y vigilarla es ciberseguridad.' },
+        { p: 'fr', t: 'Un almacén lleno de recambios por si acaso', d: 'Imprimir el recambio cuando hace falta', a: 'D3', e: 'Con la impresión 3D, el almacén de recambios es un archivo.' },
+        { p: 'fr', t: 'Formar al personal directamente con la máquina real', d: 'Un simulador de realidad virtual sin riesgos', a: 'RARV', e: 'La RV permite formar sin riesgos.' },
+        { p: 'fr', t: 'El experto tiene que viajar para guiar una reparación', d: 'Gafas de RA con ayuda a distancia', a: 'RARV', e: 'La RA añade información a lo que ve el técnico y permite la ayuda de un experto a distancia.' },
+        { p: 'fr', t: 'Plantillas ortopédicas de talla estándar', d: 'Plantillas hechas a medida a precio de serie', a: 'D3', e: 'Fabricar piezas a medida capa a capa es impresión 3D.' },
+        { p: 'fr', t: 'Las máquinas tienen datos pero nadie los ve desde la oficina', d: 'Los datos de planta llegan al programa de gestión', a: 'CLOUDIOT', e: 'Los sensores (IoT) envían los datos y la nube los hace llegar al negocio.' },
+        { p: 'fr', t: 'El cliente llama para saber dónde está su pedido', d: 'Seguimiento en tiempo real', a: 'IOT', e: 'La posición que envía el vehículo conectado (IoT) alimenta el seguimiento.' },
+        { p: 'fr', t: 'Un correo falso puede infectar la oficina y saltar a la planta', d: 'Cortafuegos entre zonas y formación', a: 'CIBER', e: 'Cortafuegos entre zonas y formación del personal: ciberseguridad.' },
+        { p: 'fr', t: 'Revisar a ojo las etiquetas de los paquetes', d: 'Cámaras que las leen y detectan errores', a: 'IA', e: 'Leer y comprobar etiquetas con cámara es visión artificial (IA).' },
+        { p: 'fr', t: 'Visitar el hotel solo a través de fotos', d: 'Visita virtual a la suite antes de reservar', a: 'RARV', e: 'Poner al cliente dentro de un espacio simulado es realidad virtual.' }
+      ]
+    },
+    {
+      id: 'p3', num: 3, mode: 'sort',
+      title: 'Los cinco patrones', ca: '2.2', apt: 'Apartado 3',
+      tagline: 'Llegan productos y servicios nuevos. Pon cada uno en el patrón que lo hace posible.',
+      recap: [
+        'Servitización: vender el uso o el resultado, no la cosa (horas de frío en lugar de una cámara).',
+        'Personalización masiva: a medida, pero a precio de serie.',
+        'Autoservicio digital: el cliente lo hace él mismo, en el móvil o en la web.',
+        'Servicio predictivo: actuar antes de que pase. Producto conectado: sigue dando datos después de venderlo.'
+      ],
+      bins: ['Servitización', 'Personalización masiva', 'Autoservicio digital', 'Servicio predictivo', 'Producto conectado'],
+      waves: [
+        { count: 18, speed: 0.85, pool: 'all' },
+        { count: 20, speed: 1.1, pool: 'all' },
+        { count: 22, speed: 1.35, pool: 'all' }
+      ],
+      items: [
+        { t: 'Horas de frío garantizadas en lugar de una cámara frigorífica', a: 0, e: 'Pagas por el uso (horas de frío), no por la cámara: servitización.' },
+        { t: 'Pagar por horas de funcionamiento de la máquina, no por la máquina', a: 0, e: 'Vender el uso en lugar de la máquina es servitización.' },
+        { t: 'Alquilar la impresora y pagar por página impresa', a: 0, e: 'Se vende el resultado (páginas), no el aparato: servitización.' },
+        { t: 'Iluminación como servicio: pagas por la luz, no por las lámparas', a: 0, e: 'Vender el resultado (luz) es servitización.' },
+        { t: 'Un fabricante de compresores cobra por metro cúbico de aire suministrado', a: 0, e: 'Se cobra por el resultado, no por el compresor: servitización.' },
+        { t: 'Plantillas hechas a medida de tu pie, a precio de serie', a: 1, e: 'A medida pero barato: personalización masiva.' },
+        { t: 'Zapatillas que el cliente diseña en la web y se fabrican a medida', a: 1, e: 'Cada cliente tiene su versión, a precio de serie: personalización masiva.' },
+        { t: 'Una crema con la fórmula ajustada a tu piel después de un test en línea', a: 1, e: 'Producto a medida para cada cliente: personalización masiva.' },
+        { t: 'Fundas de móvil impresas en 3D con tu diseño', a: 1, e: 'La impresión 3D hace posible el producto a medida a buen precio.' },
+        { t: 'Registro de entrada en el móvil y llave digital, sin pasar por recepción', a: 2, e: 'El cliente lo hace él mismo en el móvil: autoservicio digital.' },
+        { t: 'El cliente se descarga él mismo las facturas en el área de clientes', a: 2, e: 'Hacerlo uno mismo en la web es autoservicio digital.' },
+        { t: 'Cajas de autocobro en la tienda', a: 2, e: 'El cliente se cobra él mismo: autoservicio digital.' },
+        { t: 'El transportista reserva él mismo la hora de descarga en un portal', a: 2, e: 'Reservar sin llamar, desde un portal, es autoservicio digital.' },
+        { t: 'La tarjeta de embarque en el móvil, sin hacer cola en el mostrador', a: 2, e: 'El cliente hace el trámite él mismo: autoservicio digital.' },
+        { t: 'Avisar al cliente antes de que la máquina se estropee', a: 3, e: 'Actuar antes de que pase es servicio predictivo.' },
+        { t: 'El ascensor pide el técnico antes de que falle una pieza', a: 3, e: 'Anticipar la avería es servicio predictivo.' },
+        { t: 'La caldera del hotel avisa al mantenedor cuando el consumo empieza a subir', a: 3, e: 'Avisar antes de la avería es servicio predictivo.' },
+        { t: 'La flota planifica el cambio de neumáticos antes de que fallen', a: 3, e: 'Se repara antes de que pase: servicio predictivo.' },
+        { t: 'Un contenedor que informa de la temperatura durante todo el viaje', a: 4, e: 'Sigue dando datos después de venderlo: producto conectado.' },
+        { t: 'Un contador de agua que envía la lectura solo', a: 4, e: 'Un producto que envía datos una vez instalado es un producto conectado.' },
+        { t: 'Una bicicleta de alquiler que dice dónde está y cuánta batería le queda', a: 4, e: 'El producto sigue enviando datos: producto conectado.' },
+        { t: 'Una máquina de café que envía al fabricante cuántos cafés hace', a: 4, e: 'Después de venderla, la máquina sigue dando datos: producto conectado.' },
+        { t: 'Un palé con etiqueta que dice por dónde ha pasado', a: 4, e: 'El objeto informa de su recorrido: producto conectado.' }
+      ]
+    },
+    {
+      id: 'p4', num: 4, mode: 'sort',
+      title: '¿Servicio nuevo o mercado nuevo?', ca: '2.4', apt: 'Apartado 4',
+      tagline: 'Cada caja es un negocio. Decide si es un servicio nuevo de una empresa que ya existía o un mercado nuevo.',
+      recap: [
+        'Producto o servicio nuevo: una empresa que ya existía vende algo diferente.',
+        'Mercado nuevo: aparece un negocio entero que antes no podía existir porque la tecnología no lo permitía.',
+        'Mercados nuevos: plataformas entre particulares, suscripción y pago por uso, economía del dato, salud digital, ciberseguridad gestionada, formación inmersiva, comercio social, trazabilidad verificable.',
+        'Pista: pregúntate si la empresa ya existía y ahora vende otra cosa, o si el negocio entero es nuevo.'
+      ],
+      bins: ['Servicio nuevo', 'Mercado nuevo'],
+      waves: [
+        { count: 16, speed: 0.95, pool: 'all' },
+        { count: 18, speed: 1.25, pool: 'all' },
+        { count: 20, speed: 1.55, pool: 'all' }
+      ],
+      items: [
+        { t: 'Plataformas de alojamiento entre particulares', a: 1, e: 'Antes no podía existir: móvil + geolocalización + nube. Es un mercado nuevo.' },
+        { t: 'Reparto a domicilio por aplicación con repartidores autónomos', a: 1, e: 'Las plataformas que conectan particulares son un mercado nuevo.' },
+        { t: 'Software que se paga por meses', a: 1, e: 'La suscripción y el pago por uso es un mercado nuevo (cloud + IoT).' },
+        { t: 'Coche por minutos', a: 1, e: 'Pagar por uso es un mercado que antes no existía.' },
+        { t: 'Empresas que venden indicadores y datos de mercado', a: 1, e: 'Economía del dato (big data + IA): mercado nuevo.' },
+        { t: 'Consulta médica a distancia', a: 1, e: 'Salud digital (IoT + cloud + vídeo): mercado nuevo.' },
+        { t: 'Control remoto de enfermos crónicos desde casa', a: 1, e: 'Salud digital: un negocio que antes no podía existir.' },
+        { t: 'Empresas que vigilan 24 horas la red de otras empresas', a: 1, e: 'Ciberseguridad gestionada: un mercado que nace de la propia digitalización.' },
+        { t: 'Simuladores de realidad virtual para formar al personal sin riesgos', a: 1, e: 'Formación inmersiva (RA y RV): mercado nuevo.' },
+        { t: 'Vender directamente desde las redes con creadores de contenido', a: 1, e: 'Comercio social (redes + analítica): mercado nuevo.' },
+        { t: 'Certificar la huella de carbono de un producto con blockchain', a: 1, e: 'Trazabilidad verificable: mercado nuevo.' },
+        { t: 'Alquilar maquinaria por horas a través de una plataforma', a: 1, e: 'Pago por uso: mercado nuevo.' },
+        { t: 'El hotel de siempre ofrece registro en el móvil y llave digital', a: 0, e: 'El hotel ya existía y ahora vende algo diferente: servicio nuevo.' },
+        { t: 'Un fabricante de cámaras frigoríficas pasa a vender horas de frío', a: 0, e: 'Una empresa que ya existía cambia lo que vende: servicio nuevo (servitización).' },
+        { t: 'La gestoría ofrece a los clientes un panel de tesorería actualizado', a: 0, e: 'La gestoría ya existía: es un servicio nuevo.' },
+        { t: 'Una transportista vende seguimiento en tiempo real con franja de entrega', a: 0, e: 'Empresa existente con un servicio diferente: servicio nuevo.' },
+        { t: 'Una ortopedia de barrio hace plantillas a medida con escáner y 3D', a: 0, e: 'La ortopedia ya existía: es un producto nuevo.' },
+        { t: 'Una exportadora ofrece al cliente un portal para seguir la expedición', a: 0, e: 'La exportadora ya existía y añade un servicio: servicio nuevo.' },
+        { t: 'El fabricante de ascensores avisa antes de la avería', a: 0, e: 'El fabricante ya existía: es un servicio nuevo (predictivo).' },
+        { t: 'La naviera de siempre ofrece contenedores que informan de la temperatura', a: 0, e: 'La naviera ya existía: es un producto nuevo (conectado).' },
+        { t: 'El hotel ofrece una visita virtual a la suite antes de reservar', a: 0, e: 'El hotel ya existía y añade algo diferente: servicio nuevo.' },
+        { t: 'La tienda del barrio abre su tienda en línea', a: 0, e: 'La tienda ya existía: es un canal y un servicio nuevo, no un mercado nuevo.' }
+      ]
+    },
+    {
+      id: 'p5', num: 5, mode: 'sort',
+      title: 'El balance verde', ca: '2.3', apt: 'Apartado 5',
+      tagline: 'Digitalizar puede ayudar al planeta, pero no es automático. Haz el balance.',
+      recap: [
+        'Eficiente: hacer lo mismo con menos recursos. Sostenible: que se pueda mantener sin dañar el medio ambiente, las personas ni la economía.',
+        'Qué ahorra (+): menos energía, menos kilómetros en vacío, menos papel y viajes, menos desperdicio, más reciclaje.',
+        'Qué cuesta (−): electricidad y agua de los centros de datos, energía para entrenar la IA, residuos electrónicos, efecto rebote.',
+        'Sin datos no se puede informar de nada: la sostenibilidad se demuestra con un indicador.'
+      ],
+      waves: [
+        { label: 'Qué ahorra y qué cuesta', bins: ['Ahorra (+)', 'Cuesta (−)'], count: 16, speed: 1, pool: 'bal' },
+        { label: '¿Indicador o humo?', bins: ['Tiene indicador', 'Es humo'], count: 16, speed: 1.15, pool: 'ind' },
+        { label: 'Ámbitos donde ayudan las THD', bins: ['Energía', 'Transporte', 'Materiales', 'Cadena de frío', 'Papel y viajes', 'Economía circular'], count: 20, speed: 1.05, pool: 'amb' }
+      ],
+      items: [
+        { p: 'bal', t: 'Luces y clima que se apagan solos en las habitaciones vacías', a: 0, e: 'Menos energía: va a la columna del ahorro.' },
+        { p: 'bal', t: 'Rutas optimizadas con menos kilómetros en vacío', a: 0, e: 'Menos kilómetros en vacío: ahorro.' },
+        { p: 'bal', t: 'Firma electrónica y reuniones a distancia', a: 0, e: 'Menos papel y menos viajes: ahorro.' },
+        { p: 'bal', t: 'Producir según la demanda y tener menos stock que caduca', a: 0, e: 'Menos desperdicio y stock: ahorro.' },
+        { p: 'bal', t: 'Pasaporte digital para reutilizar y reciclar las piezas', a: 0, e: 'Más reutilización y reciclaje: ahorro.' },
+        { p: 'bal', t: 'Menos lotes tirados gracias a la cadena de frío controlada', a: 0, e: 'Menos desperdicio: ahorro.' },
+        { p: 'bal', t: 'Imprimir en 3D solo bajo pedido', a: 0, e: 'Menos stock y menos residuos: ahorro.' },
+        { p: 'bal', t: 'Electricidad y agua de los centros de datos', a: 1, e: 'La nube también gasta: va a la columna del coste.' },
+        { p: 'bal', t: 'Energía para entrenar la IA', a: 1, e: 'Entrenar modelos consume mucha energía: coste.' },
+        { p: 'bal', t: 'Residuos electrónicos: sensores, gafas, tabletas', a: 1, e: 'Los aparatos acaban siendo residuos: coste.' },
+        { p: 'bal', t: 'Efecto rebote: como es más barato, se consume más', a: 1, e: 'El efecto rebote puede comerse el ahorro: coste.' },
+        { p: 'bal', t: 'Guardar en la nube miles de vídeos que nadie mira', a: 1, e: 'Guardar datos gasta electricidad en los centros de datos: coste.' },
+        { p: 'bal', t: 'Cambiar todas las tabletas cada dos años', a: 1, e: 'Más residuos electrónicos: coste.' },
+        { p: 'bal', t: 'Como enviar sale más barato, se hacen más envíos pequeños', a: 1, e: 'Es efecto rebote: coste.' },
+        { p: 'ind', t: 'Hemos bajado de 14 a 11 kWh por habitación ocupada', a: 0, e: 'Hay una cifra que se puede comprobar: es un indicador.' },
+        { p: 'ind', t: 'Los kilómetros en vacío han pasado del 22% al 15%', a: 0, e: 'Dato medible antes y después: indicador.' },
+        { p: 'ind', t: 'Este trimestre hemos tirado tres lotes menos', a: 0, e: 'Es una cifra comprobable: indicador.' },
+        { p: 'ind', t: 'Hemos reducido un 40% el papel impreso en la oficina', a: 0, e: 'Tiene un porcentaje medido: indicador.' },
+        { p: 'ind', t: 'Las emisiones por pedido han bajado un 12%', a: 0, e: 'Indicador claro y medible.' },
+        { p: 'ind', t: 'Reutilizamos el 30% de los componentes devueltos', a: 0, e: 'Cifra de reutilización: indicador.' },
+        { p: 'ind', t: 'Balance neto: ahorro menos coste, con las dos columnas medidas', a: 0, e: 'Es exactamente el balance que pide la teoría.' },
+        { p: 'ind', t: 'Somos muy verdes porque somos digitales', a: 1, e: 'Buenas palabras sin ningún indicador: humo.' },
+        { p: 'ind', t: 'La nube no contamina', a: 1, e: 'Falso: los centros de datos gastan electricidad y agua.' },
+        { p: 'ind', t: 'Digitalizar siempre es sostenible', a: 1, e: 'No es automático: hay que hacer el balance.' },
+        { p: 'ind', t: 'Hemos puesto sensores: ya somos sostenibles', a: 1, e: 'Tener sensores no demuestra nada si no se mide el ahorro.' },
+        { p: 'ind', t: 'La IA ahorra energía, seguro', a: 1, e: 'Entrenar la IA también gasta energía; sin balance es humo.' },
+        { p: 'ind', t: 'Somos una empresa comprometida con el planeta', a: 1, e: 'Frase bonita sin ninguna cifra: humo.' },
+        { p: 'ind', t: 'Como ya no imprimimos, no tenemos ningún impacto', a: 1, e: 'Los aparatos y la nube también tienen impacto: humo.' },
+        { p: 'amb', t: 'Un hotel apaga clima y luces en las habitaciones vacías', a: 0, e: 'Medir el consumo por zonas y actuar: ámbito de la energía.' },
+        { p: 'amb', t: 'Medir el consumo por zonas y actuar automáticamente', a: 0, e: 'Es el ámbito de la energía.' },
+        { p: 'amb', t: 'Contadores de luz por planta en el hotel', a: 0, e: 'Medir el consumo es el ámbito de la energía.' },
+        { p: 'amb', t: 'Optimizar rutas y cargas', a: 1, e: 'Es el ámbito del transporte.' },
+        { p: 'amb', t: 'Menos emisiones por pedido entregado', a: 1, e: 'Indicador típico del ámbito del transporte.' },
+        { p: 'amb', t: 'Menos kilómetros en vacío', a: 1, e: 'Ámbito del transporte.' },
+        { p: 'amb', t: 'Producir según la demanda', a: 2, e: 'Ámbito de los materiales: menos stock que caduca.' },
+        { p: 'amb', t: 'Imprimir en 3D bajo pedido', a: 2, e: 'Ámbito de los materiales: menos residuos.' },
+        { p: 'amb', t: 'Menos stock que caduca', a: 2, e: 'Ámbito de los materiales.' },
+        { p: 'amb', t: 'Controlar y registrar la temperatura de los alimentos', a: 3, e: 'Ámbito de los alimentos y fármacos: la cadena de frío.' },
+        { p: 'amb', t: 'Menos lotes de vacunas tirados', a: 3, e: 'Ámbito de los alimentos y fármacos (cadena de frío).' },
+        { p: 'amb', t: 'Sondas en el remolque frigorífico', a: 3, e: 'Cadena de frío: ámbito de los alimentos y fármacos.' },
+        { p: 'amb', t: 'Firma electrónica de los contratos', a: 4, e: 'Ámbito del papel y los desplazamientos.' },
+        { p: 'amb', t: 'Reuniones a distancia en lugar de viajar', a: 4, e: 'Ámbito del papel y los desplazamientos.' },
+        { p: 'amb', t: 'Factura electrónica en lugar de papel', a: 4, e: 'Ámbito del papel y los desplazamientos.' },
+        { p: 'amb', t: 'Pasaporte digital del producto', a: 5, e: 'Ámbito de la economía circular: más reutilización.' },
+        { p: 'amb', t: 'Trazabilidad de las piezas para poder reciclarlas', a: 5, e: 'Ámbito de la economía circular.' },
+        { p: 'amb', t: 'Más reutilización y reciclaje', a: 5, e: 'Ámbito de la economía circular.' }
+      ]
+    },
+    {
+      id: 'p6', num: 6, mode: 'snake',
+      title: 'La serpiente del informe', ca: '2.7', apt: 'Apartado 8',
+      tagline: 'Guía la serpiente para comerse los bloques del informe de tecnologías. Si te comes el que no toca, pierdes una vida.',
+      recap: [
+        'El informe de THD tiene siempre diez bloques, en este orden:',
+        '1 Portada · 2 Objetivo · 3 Contexto de la empresa · 4 Ficha de cada tecnología · 5 Tabla de síntesis',
+        '6 Prioridades justificadas · 7 Impacto en IT y OT · 8 Sostenibilidad · 9 Conclusiones · 10 Fuentes',
+        'La pregunta que lo resuelve todo: ¿qué problema de esta empresa resuelve cada tecnología?'
+      ],
+      blocks: ['Portada', 'Objetivo', 'Contexto de la empresa', 'Ficha de cada tecnología', 'Tabla de síntesis', 'Prioridades justificadas', 'Impacto en IT y OT', 'Sostenibilidad', 'Conclusiones', 'Fuentes'],
+      waves: [
+        { label: 'Monta el informe en orden', kind: 'order', count: 10, speed: 1, tiles: 3 },
+        { label: '¿Dónde va este contenido?', kind: 'match', count: 14, speed: 1.15, tiles: 3 },
+        { label: '¿Dónde va este contenido? (rápido)', kind: 'match', count: 16, speed: 1.35, tiles: 4 }
+      ],
+      items: [
+        { t: 'Título, empresa analizada, ciclo, nombre y fecha', a: 0, e: 'Estos datos van en la portada (bloque 1).' },
+        { t: 'Informe de THD · Transports Delta Fred · TR1 · Marta Garcia · 02/11/2026', a: 0, e: 'Título, empresa, ciclo, nombre y fecha: portada.' },
+        { t: 'Dos o tres líneas: qué analizas y para quién', a: 1, e: 'Es el objetivo (bloque 2).' },
+        { t: 'Analizar qué tecnologías necesita el Hotel Mar Blau, para la dirección', a: 1, e: 'Qué analizas y para quién: objetivo.' },
+        { t: 'Qué hace la empresa, qué tamaño tiene y cómo de digitalizada está ahora', a: 2, e: 'Es el contexto de la empresa (bloque 3).' },
+        { t: 'Hotel de 120 habitaciones; las reservas entran por teléfono y van a un Excel', a: 2, e: 'Describe la empresa y su nivel digital actual: contexto.' },
+        { t: 'Qué es, características, área, problema que resuelve, qué hace falta antes y riesgos', a: 3, e: 'Es la ficha de cada tecnología (bloque 4).' },
+        { t: 'Blockchain: registro compartido; área negocio; resuelve la confianza con el transitario', a: 3, e: 'Explica una tecnología en detalle: ficha de cada tecnología.' },
+        { t: 'Una fila por tecnología: área · qué aporta · prioridad · indicador', a: 4, e: 'Es la tabla de síntesis (bloque 5).' },
+        { t: 'IoT | Planta | Apaga el clima de las habitaciones vacías | Alta | kWh por habitación ocupada', a: 4, e: 'Es una fila de la tabla de síntesis.' },
+        { t: 'Ordenar por impacto y esfuerzo y explicar por qué las tres primeras van primero', a: 5, e: 'Son las prioridades justificadas (bloque 6).' },
+        { t: 'Primero IoT, después IA y después ciberseguridad, porque...', a: 5, e: 'Ordena y justifica: prioridades.' },
+        { t: 'Qué cambia en cada entorno y cómo se conectan', a: 6, e: 'Es el impacto en IT y OT (bloque 7).' },
+        { t: 'Los datos de las cerraduras llegarán al programa del hotel y nadie hará rondas', a: 6, e: 'Explica qué cambia en la oficina y en la planta: impacto en IT y OT.' },
+        { t: 'El balance: qué ahorra y qué cuesta', a: 7, e: 'Es el bloque de sostenibilidad (bloque 8).' },
+        { t: 'Ahorro: menos kWh. Coste: energía de la nube y residuos de los sensores', a: 7, e: 'Las dos columnas del balance: sostenibilidad.' },
+        { t: 'Tres o cuatro afirmaciones que puedas defender, no un resumen', a: 8, e: 'Son las conclusiones (bloque 9).' },
+        { t: 'Con la IA de precios el hotel puede subir la ocupación sin bajar el precio medio', a: 8, e: 'Afirmación defendible: conclusiones.' },
+        { t: 'De dónde has sacado la información, con fecha, y si has usado IA', a: 9, e: 'Son las fuentes (bloque 10).' },
+        { t: 'He usado una IA para entender qué es un gemelo digital y lo he comprobado en los apuntes', a: 9, e: 'El uso de la IA se declara en las fuentes.' }
+      ]
+    },
+    {
+      id: 'p7', num: 7, mode: 'whack',
+      title: 'Las trampas de Fum', ca: '2.2 a 2.7', apt: 'Apartados 10 y 11',
+      tagline: 'En las ventanas aparecen frases. Atrapa las trampas de Fum y deja pasar las que son ciertas.',
+      recap: [
+        'Errores típicos: hacer una lista de tecnologías sin decir qué resuelven, poner blockchain o gemelo digital «porque queda moderno».',
+        'Confundir big data con tener muchos Excel; decir que la IA lo hace todo sola.',
+        'Hablar de sostenibilidad sin ningún indicador; olvidar la ciberseguridad.',
+        'No decir si cada tecnología pesa en el negocio o en la planta.'
+      ],
+      waves: [
+        { count: 16, speed: 1, max: 1 },
+        { count: 18, speed: 1.2, max: 2 },
+        { count: 20, speed: 1.4, max: 2 }
+      ],
+      items: [
+        { t: 'Ponemos blockchain porque queda moderno.', a: 1, e: 'Trampa: proponer blockchain sin justificar qué problema resuelve es un error típico.' },
+        { t: 'Un gemelo digital funciona bien aunque no tengamos datos.', a: 1, e: 'Trampa: con datos malos o sin datos, el gemelo solo simula errores.' },
+        { t: 'Tenemos 40 Excel: ya hacemos big data.', a: 1, e: 'Trampa: big data no es tener muchos Excel.' },
+        { t: 'La IA lo hace todo sola: no hace falta revisar nada.', a: 1, e: 'Trampa: la IA necesita datos buenos, calidad y supervisión humana.' },
+        { t: 'Somos sostenibles: lo dice nuestro eslogan.', a: 1, e: 'Trampa: sin indicador, la sostenibilidad son buenas palabras.' },
+        { t: 'La ciberseguridad ya la miraremos al final.', a: 1, e: 'Trampa: la ciberseguridad hace posible todo lo demás; no se puede olvidar.' },
+        { t: 'Aquí tienes las 11 THD; no hace falta decir qué resuelve cada una.', a: 1, e: 'Trampa: un catálogo sin problemas resueltos es un error típico.' },
+        { t: 'No hace falta decir si una tecnología pesa en el negocio o en la planta.', a: 1, e: 'Trampa: es exactamente lo que pide el criterio 2.5.' },
+        { t: 'Digitalizar siempre es sostenible.', a: 1, e: 'Trampa: hay que hacer el balance entre lo que ahorra y lo que cuesta.' },
+        { t: 'Si una sola empresa controla los datos, hace falta blockchain.', a: 1, e: 'Trampa: en este caso basta con una base de datos normal.' },
+        { t: 'Un cobot y un RPA son lo mismo.', a: 1, e: 'Trampa: el cobot es físico; el RPA es un robot de software de oficina.' },
+        { t: 'Con datos malos, la IA aprende igual de bien.', a: 1, e: 'Trampa: datos malos dan conclusiones falsas.' },
+        { t: 'El 5G solo sirve para ver vídeos más rápido.', a: 1, e: 'Trampa: el 5G conecta miles de aparatos con muy poca latencia.' },
+        { t: 'Las conclusiones son un resumen de todo el informe.', a: 1, e: 'Trampa: son tres o cuatro afirmaciones que puedas defender, no un resumen.' },
+        { t: 'En las fuentes no hace falta poner la fecha.', a: 1, e: 'Trampa: las fuentes van con fecha.' },
+        { t: 'Si he usado IA, no hace falta decirlo en el informe.', a: 1, e: 'Trampa: hay que decir para qué la has usado y qué has comprobado.' },
+        { t: 'La impresión 3D sale a cuenta para hacer 100.000 piezas iguales.', a: 1, e: 'Trampa: es cara para series largas.' },
+        { t: 'En la nube no hay ningún riesgo: todo es cosa del proveedor.', a: 1, e: 'Trampa: dependencia de un proveedor, facturas y dónde se guardan los datos.' },
+        { t: 'Un aparato IoT con la contraseña de fábrica ya es seguro.', a: 1, e: 'Trampa: es la puerta de entrada preferida de los atacantes.' },
+        { t: 'Servitización quiere decir vender más máquinas.', a: 1, e: 'Trampa: es vender el uso o el resultado, no la máquina.' },
+        { t: 'Cada tecnología del informe resuelve un problema concreto de la empresa.', a: 0, e: 'Cierto: es la pregunta que lo resuelve todo.' },
+        { t: 'El blockchain tiene sentido cuando varias empresas comparten datos sin intermediario.', a: 0, e: 'Cierto: da confianza entre empresas que no se conocen.' },
+        { t: 'La IA necesita datos buenos y supervisión humana.', a: 0, e: 'Cierto.' },
+        { t: 'La sostenibilidad se demuestra con indicadores.', a: 0, e: 'Cierto: sin datos no se puede informar de nada.' },
+        { t: 'La ciberseguridad hace posibles todas las demás THD.', a: 0, e: 'Cierto: sin confianza nadie conecta la planta ni sube datos a la nube.' },
+        { t: 'La robótica pesa en la planta y el blockchain en el negocio.', a: 0, e: 'Cierto.' },
+        { t: 'Big data: volumen, velocidad, variedad, veracidad y valor.', a: 0, e: 'Cierto: son las 5 V.' },
+        { t: 'Un gemelo digital necesita muchos datos y buenos.', a: 0, e: 'Cierto.' },
+        { t: 'Las conclusiones son tres o cuatro afirmaciones que puedes defender.', a: 0, e: 'Cierto.' },
+        { t: 'Primero el problema, después la tecnología.', a: 0, e: 'Cierto: si no sabes qué problema resuelve, la tecnología no tiene que estar.' },
+        { t: 'Digitalizar puede ayudar al planeta, pero hay que hacer el balance.', a: 0, e: 'Cierto.' },
+        { t: 'El RPA es un robot de software que repite tareas de oficina.', a: 0, e: 'Cierto.' },
+        { t: 'La impresión 3D va bien para prototipos y recambios.', a: 0, e: 'Cierto.' },
+        { t: 'El 5G conecta miles de aparatos con muy poca latencia.', a: 0, e: 'Cierto.' },
+        { t: 'Servitización: vender el uso en lugar del producto.', a: 0, e: 'Cierto.' },
+        { t: 'El eslabón más débil de la ciberseguridad son las personas.', a: 0, e: 'Cierto: sin formación, la mejor tecnología no sirve.' },
+        { t: 'Las prioridades del informe se ordenan por impacto y esfuerzo.', a: 0, e: 'Cierto.' }
+      ]
+    },
+    {
+      id: 'p8', num: 8, mode: 'boss',
+      title: 'Duelo en la azotea', ca: '2.2 a 2.7', apt: 'Repaso final',
+      tagline: 'Fum te espera arriba del todo. Cada frase que lanza es cierta o es humo. Agota su barra de humo.',
+      recap: [
+        'Mezcla de todo: patrones, mercados nuevos, sostenibilidad, negocio o planta, antes → después y el informe.',
+        'Envía cada frase a «Es cierto» o a «Es humo».',
+        'Cada acierto le quita humo a Fum. Cada error te quita una vida.',
+        'Tres fases, cada vez más rápidas.'
+      ],
+      bins: ['Es cierto', 'Es humo'],
+      waves: [
+        { label: 'Fase 1', count: 13, speed: 1, hp: 13 },
+        { label: 'Fase 2', count: 15, speed: 1.3, hp: 15 },
+        { label: 'Fase 3', count: 17, speed: 1.6, hp: 17 }
+      ],
+      items: [
+        { t: 'Servitización: vender horas de frío en lugar de la cámara.', a: 0, e: 'Cierto: se vende el uso, no la cosa.' },
+        { t: 'Un mercado nuevo es un negocio que antes no podía existir.', a: 0, e: 'Cierto.' },
+        { t: 'Eficiente quiere decir hacer lo mismo con menos recursos.', a: 0, e: 'Cierto.' },
+        { t: 'Entrenar la IA consume energía: va a la columna del coste.', a: 0, e: 'Cierto.' },
+        { t: 'Efecto rebote: como es más barato, se consume más.', a: 0, e: 'Cierto.' },
+        { t: 'Mantenimiento predictivo: IoT + IA para reparar antes.', a: 0, e: 'Cierto.' },
+        { t: 'La IA lee las facturas y un RPA las introduce en el programa.', a: 0, e: 'Cierto: es una mejora del entorno IT.' },
+        { t: 'Un gemelo digital permite probar cambios sin tocar la planta real.', a: 0, e: 'Cierto.' },
+        { t: 'Las plataformas que conectan particulares son un mercado nuevo.', a: 0, e: 'Cierto.' },
+        { t: 'Un hotel que ofrece registro en el móvil hace autoservicio digital.', a: 0, e: 'Cierto.' },
+        { t: 'La tabla de síntesis tiene una fila por tecnología.', a: 0, e: 'Cierto: área, qué aporta, prioridad e indicador.' },
+        { t: 'Sin datos, no se puede informar de la sostenibilidad.', a: 0, e: 'Cierto: la digitalización es el primer paso de la sostenibilidad.' },
+        { t: 'Un producto conectado sigue dando datos después de venderlo.', a: 0, e: 'Cierto.' },
+        { t: 'La ciberseguridad pesa mucho en el negocio y en la planta.', a: 0, e: 'Cierto.' },
+        { t: 'La personalización masiva hace productos a medida a precio de serie.', a: 0, e: 'Cierto.' },
+        { t: 'La consulta médica a distancia es salud digital, un mercado nuevo.', a: 0, e: 'Cierto.' },
+        { t: 'Que el MES y el ERP se hablen es una mejora en la frontera IT/OT.', a: 0, e: 'Cierto.' },
+        { t: 'En los hoteles, el precio se recalcula varias veces al día según la demanda.', a: 0, e: 'Cierto: es un mercado que ya existía y ha cambiado (revenue management).' },
+        { t: 'Un mercado nuevo es cuando una empresa cambia el logotipo.', a: 1, e: 'Humo: un mercado nuevo es un negocio entero que antes no podía existir.' },
+        { t: 'Servicio predictivo: reparar la máquina cuando se estropea.', a: 1, e: 'Humo: predictivo quiere decir antes de que pase.' },
+        { t: 'Los residuos electrónicos van a la columna del ahorro.', a: 1, e: 'Humo: son un coste.' },
+        { t: 'El informe empieza por las conclusiones.', a: 1, e: 'Humo: empieza por la portada; las conclusiones son el bloque 9.' },
+        { t: 'El blockchain pesa sobre todo en la planta.', a: 1, e: 'Humo: pesa en el negocio y casi no toca la planta.' },
+        { t: 'La robótica pesa sobre todo en el negocio.', a: 1, e: 'Humo: pesa en la planta.' },
+        { t: 'Autoservicio digital quiere decir que el cliente no recibe ningún servicio.', a: 1, e: 'Humo: quiere decir que el cliente lo hace él mismo, en el móvil o en la web.' },
+        { t: 'Personalización masiva quiere decir productos a medida y muy caros.', a: 1, e: 'Humo: a medida, pero a precio de serie.' },
+        { t: 'Las prioridades del informe se ordenan por orden alfabético.', a: 1, e: 'Humo: por impacto y esfuerzo.' },
+        { t: 'Un informe a final de mes es mejor que indicadores en tiempo real.', a: 1, e: 'Humo: el big data permite pasar del pasado al presente.' },
+        { t: 'El 5G es útil sobre todo en la oficina.', a: 1, e: 'Humo: pesa sobre todo en la planta.' },
+        { t: 'Revisar la calidad a ojo es más fiable que la visión artificial.', a: 1, e: 'Humo: las cámaras con IA detectan defectos de forma continua.' },
+        { t: 'Ser eficiente y ser sostenible es exactamente lo mismo.', a: 1, e: 'Humo: eficiente es menos recursos; sostenible es que se pueda mantener en el tiempo.' },
+        { t: 'La tabla de síntesis va en la portada.', a: 1, e: 'Humo: es el bloque 5.' },
+        { t: 'Servicio nuevo y mercado nuevo son sinónimos.', a: 1, e: 'Humo: el servicio nuevo lo vende una empresa que ya existía.' },
+        { t: 'Si la empresa tiene sensores, ya es sostenible.', a: 1, e: 'Humo: hay que medir el ahorro y el coste.' },
+        { t: 'Una exportadora de siempre que ofrece seguimiento en línea crea un mercado nuevo.', a: 1, e: 'Humo: la empresa ya existía; es un servicio nuevo.' },
+        { t: 'En el informe, las fuentes no necesitan fecha.', a: 1, e: 'Humo: las fuentes van con fecha.' }
+      ]
+    }
+  ]
+};
+if (typeof module !== 'undefined') module.exports = CONTENT_ES;
+
+// Textos de la interfície · català (ca) i castellano (es)
+const STR = {
+  ca: {
+    docTitle: "La Torre d'en Fum",
+    chipTop: 'MP 1665 · RA2 · Tecnologies habilitadores digitals',
+    gameTitle: "La Torre d'en Fum",
+    lead: "En Fum ha obert FumTech, una consultora que ven «tecnologia miraculosa» a les pimes del Prat. Ocupa una torre de vuit plantes i a cada planta hi ha una trampa.",
+    lead2: "Puja planta a planta fent servir el que saps del RA2: productes i serveis nous, mercats nous, sostenibilitat, negoci o planta, abans → després i l'informe de tecnologies. Al terrat t'espera en Fum.",
+    fumQuote: "«Posa'm blockchain a tot arreu, que queda modern!» · en Fum",
+    langLabel: 'Idioma',
+    playerCard: 'Fitxa del jugador',
+    nameLabel: 'Nom i cognoms',
+    groupLabel: 'Grup',
+    choose: 'Tria…',
+    other: 'Altres',
+    enter: 'Entra a la torre',
+    saveNote: 'La partida es desa en aquest navegador. Al final descarregaràs un informe en PDF amb els teus resultats.',
+    continueSaved: 'Continua la partida de {name} ({group})',
+    errName: 'Escriu el teu nom i cognoms.',
+    errGroup: 'Tria el teu grup.',
+    tower: 'La torre',
+    help: 'Com es juga',
+    soundOn: 'So: sí', soundOff: 'So: no',
+    langSwitch: 'Castellano',
+    langSwitchAria: 'Canvia a castellano',
+    pdfBtn: "Descarrega l'informe PDF",
+    reset: 'Comença de nou',
+    back: 'Torna a la torre',
+    go: 'Som-hi',
+    recall: 'Recorda',
+    controls: 'Controls',
+    pauseBtn: 'Pausa (P)',
+    hFloor: 'Planta', hWave: 'Onada', hScore: 'Punts', hCombo: 'Ratxa', hAcc: 'Encert', hLives: 'Vides',
+    livesAria: '{n} vides',
+    starsAria: '{n} de 3 estrelles',
+    lvNone: 'No jugada', lv90: 'Excel·lent', lv70: 'Assolit', lv50: 'En procés', lv0: 'Cal repassar',
+    sPlayer: 'Jugador', sPassed: 'Plantes superades', sFirst: 'Nota del primer intent', sPoints: 'Punts', sStars: 'Estrelles', sTime: 'Temps de joc',
+    stLocked: 'Tancada', stTodo: 'Per jugar', stDone: '1r intent {first}% · millor {best}%',
+    floorAria: 'Planta {n}: {title}. {status}',
+    floorN: 'Planta {n}', roof: 'Terrat', caShort: 'CA',
+    kSort: [['← →', 'Tria la zona on cau la caixa'], ['↓ o Espai', 'Deixa-la caure de cop (més punts)'], ['1, 2, 3…', 'Envia-la directament a aquella zona'], ['Ratolí o dit', 'Toca una zona per enviar-hi la caixa']],
+    kShoot: [['← →', 'Mou la nau (o arrossega-la amb el dit o el ratolí)'], ['1, 2, 3…', 'Dispara aquella tecnologia'], ['Botons', 'Toca una tecnologia per disparar-la'], ['Línia vermella', 'Si un problema la toca, perds una vida']],
+    kSnake: [['← ↑ → ↓', 'o W A S D: gira la serp'], ['Dit', 'Llisca o fes servir les fletxes de pantalla'], ['Parets', 'Si hi xoques, perds una vida'], ['Blocs', 'Menja només el bloc que toca']],
+    kWhack: [['Clic o dit', 'Atrapa la frase que és una trampa'], ['1 a 9', 'Atrapa la finestra amb aquest número'], ['Frases certes', 'Deixa-les passar: també compten'], ['Barra lila', 'El temps que queda abans que marxi']],
+    kBoss: [['← →', 'Tria «És cert» o «És fum»'], ['↓ o Espai', 'Deixa caure la frase de cop'], ['1 o 2', 'Envia-la directament'], ['Ratolí o dit', 'Toca la zona']],
+    kPause: 'Pausa',
+    waveN: 'Onada {n} de {m}',
+    waveFirst: "Tens 3 vides per onada. Les errades t'expliquen el perquè i tornen a sortir més endavant.",
+    waveNext: "Més ràpid que l'anterior. Tornes a tenir 3 vides.",
+    wrongTitle: 'No és correcte',
+    youAnswered: 'Has respost:',
+    rightAnswer: 'Resposta correcta:',
+    gotIt: 'Entesos',
+    noLivesTitle: "T'has quedat sense vides",
+    noLivesText: "Tornes a començar aquesta onada. El que ja has respost a la primera no canvia la nota.",
+    restartWave: "Torna a començar l'onada",
+    retry: 'Torna-ho a provar',
+    repeat: 'Repeteix',
+    nextFloor: 'Puja a la planta següent',
+    repeatDuel: 'Repeteix el duel',
+    floorPassed: 'Planta {n} superada',
+    floorFailed: 'Encara no has superat la planta',
+    firstCount: 'Encert a la primera: {ok} de {n}.',
+    openedNext: 'Has obert la planta següent.',
+    needPass: 'Necessites un {p}% per obrir la planta següent.',
+    firstNote: "Aquest era el teu primer intent: és el que surt a l'informe. Pots repetir la planta per millorar les estrelles.",
+    laterNote: "El primer intent ({first}%) és el que compta a l'informe; aquí millores les estrelles i el rècord.",
+    errNote: "Errades d'aquest intent: {n}. Les tens explicades a l'informe PDF.",
+    pts: 'pts',
+    victoryTitle: 'En Fum ha marxat de la torre',
+    victoryQuote: "«Ja veig que no et puc vendre fum. Me'n vaig a una altra ciutat…»",
+    victoryText: 'Has pujat les vuit plantes. La teva nota del primer intent és <strong>{s}/100</strong>.',
+    victoryPdf: "Descarrega ara l'informe PDF amb els teus resultats i lliura'l on t'indiqui el professor. També el pots descarregar més tard des de la torre.",
+    fumSays: 'En Fum diu…',
+    noZone: "No l'has enviat a cap zona",
+    before: 'Abans', after: 'Després',
+    lateGiven: "No l'has resolt a temps",
+    lateTitle: 'El problema ha arribat a baix',
+    orderPrompt: "Quin és el bloc {n} de l'informe? Menja'l.",
+    orderSmall: "Munta l'informe · {i} de {n}",
+    matchSmall: 'On va aquest contingut? · {i} de {n}',
+    blockN: "Bloc {n} de l'informe",
+    orderIs: "L'ordre és: {list}.",
+    crashTitle: 'Xoc!',
+    crashText: 'Has xocat amb una paret o amb la serp. Perds una vida, però no compta com a errada de contingut.',
+    cont: 'Continua',
+    up: 'Amunt', left: 'Esquerra', down: 'Avall', right: 'Dreta',
+    whackSmall: "Les trampes d'en Fum",
+    whackPrompt: 'Atrapa les frases falses. Deixa passar les certes.',
+    whackHitGiven: "L'has atrapada com a trampa",
+    whackHitCorrect: 'És certa: calia deixar-la passar',
+    whackPassGiven: "L'has deixat passar",
+    whackPassCorrect: 'És una trampa: calia atrapar-la',
+    escapedTitle: "Se t'ha escapat una trampa",
+    popTrap: 'Trampa!', popTrue: 'Certa',
+    pauseTitle: 'Pausa',
+    pauseText: 'Si surts ara, aquest intent de la planta no es desa.',
+    pauseLang: 'Canvia a castellano',
+    pauseLangNote: "Si canvies d'idioma, tornes a començar aquesta onada en castellano. El que ja has respost a la primera no canvia la nota.",
+    exitTower: 'Surt a la torre',
+    helpText: "Puja les vuit plantes de la torre. Cada planta treballa un apartat del RA2 amb un joc diferent i té tres onades, cada cop més ràpides.",
+    thFloor: 'Planta', thGame: 'Joc', thCa: 'CA',
+    help1: "Compta l'encert a la primera del primer intent de cada planta: és la nota de l'informe.",
+    help2: 'Necessites un {p}% per obrir la planta següent. Pots repetir plantes per guanyar estrelles.',
+    help3: 'Tens 3 vides per onada. Cada errada t\'explica la resposta correcta i aquella pregunta torna a sortir.',
+    help4: "Quan acabis, descarrega l'informe PDF des de la torre.",
+    resetTitle: 'Començar de nou?',
+    resetText: "S'esborraran tots els resultats d'aquest navegador.",
+    cancel: 'Cancel·la',
+    resetGo: 'Esborra i comença',
+    savedTitle: 'Ja hi ha una partida desada',
+    savedText: "En aquest navegador hi ha la partida de <strong>{name} ({group})</strong>. Si en comences una de nova, s'esborrarà.",
+    savedKeep: 'Continua la desada',
+    savedNew: 'Comença una partida nova',
+    pdfNoLib: "No s'ha pogut carregar el generador de PDF. Comprova la connexió a Internet i torna a carregar la pàgina.",
+    pdfPreparing: 'Preparant el PDF…',
+    pdfDeclined: 'Has cancel·lat la descàrrega.',
+    pdfDone: "Informe preparat. Lliura'l on t'indiqui el professor.",
+    pdfError: "No s'ha pogut generar el PDF: {m}",
+    pdfFile: '1665_TorreFum_{name}_{group}.pdf',
+    pdfTitle: "La Torre d'en Fum · Informe de resultats",
+    pdfSub: 'MP 1665 Digitalització aplicada als sectors productius · RA2 · Tecnologies habilitadores digitals (apartats 3 a 8)',
+    pdfStudent: 'Alumne/a', pdfGroup: 'Grup', pdfDate: 'Data', pdfTime: 'Temps de joc', pdfPassed: 'Plantes superades', pdfOf: '{a} de {b}',
+    pdfScore: 'Nota (primer intent) · {l}',
+    pdfByFloor: 'Resultats per planta',
+    pdfCols: ['Planta', 'Apartat', 'CA', '1r intent', 'Millor', 'Estrelles', 'Nivell'],
+    pdfStarsOf: '{n} de 3',
+    pdfNote: "La nota de cada planta és el percentatge d'encerts a la primera en el primer intent complet. Nivells: Excel·lent ≥ 90 · Assolit ≥ 70 · En procés ≥ 50 · Cal repassar < 50. Per superar una planta cal un 70%.",
+    pdfReview: 'Per repassar',
+    pdfFloorHead: 'Planta {n} · {title} (CA {ca})',
+    pdfRoof: 'terrat',
+    pdfGiven: 'Has respost: ', pdfCorrect: 'Correcte: ', pdfWhy: 'Per què: ',
+    pdfNoErrors: 'Cap errada als primers intents de les plantes jugades.',
+    pdfCode: 'Codi de verificació: {code} · {name} · {group}',
+    pdfLang: 'Idioma de la partida: català',
+    locale: 'ca-ES', numLocale: 'ca'
+  },
+  es: {
+    docTitle: 'La Torre de Fum',
+    chipTop: 'MP 1665 · RA2 · Tecnologías habilitadoras digitales',
+    gameTitle: 'La Torre de Fum',
+    lead: 'Fum ha abierto FumTech, una consultora que vende «tecnología milagrosa» a las pymes del Prat. Ocupa una torre de ocho plantas y en cada planta hay una trampa.',
+    lead2: 'Sube planta a planta usando lo que sabes del RA2: productos y servicios nuevos, mercados nuevos, sostenibilidad, negocio o planta, antes → después y el informe de tecnologías. En la azotea te espera Fum.',
+    fumQuote: '«¡Ponme blockchain en todas partes, que queda moderno!» · Fum',
+    langLabel: 'Idioma',
+    playerCard: 'Ficha del jugador',
+    nameLabel: 'Nombre y apellidos',
+    groupLabel: 'Grupo',
+    choose: 'Elige…',
+    other: 'Otros',
+    enter: 'Entra en la torre',
+    saveNote: 'La partida se guarda en este navegador. Al final descargarás un informe en PDF con tus resultados.',
+    continueSaved: 'Continúa la partida de {name} ({group})',
+    errName: 'Escribe tu nombre y apellidos.',
+    errGroup: 'Elige tu grupo.',
+    tower: 'La torre',
+    help: 'Cómo se juega',
+    soundOn: 'Sonido: sí', soundOff: 'Sonido: no',
+    langSwitch: 'Català',
+    langSwitchAria: 'Canvia a català',
+    pdfBtn: 'Descarga el informe PDF',
+    reset: 'Empieza de nuevo',
+    back: 'Vuelve a la torre',
+    go: '¡Vamos!',
+    recall: 'Recuerda',
+    controls: 'Controles',
+    pauseBtn: 'Pausa (P)',
+    hFloor: 'Planta', hWave: 'Oleada', hScore: 'Puntos', hCombo: 'Racha', hAcc: 'Acierto', hLives: 'Vidas',
+    livesAria: '{n} vidas',
+    starsAria: '{n} de 3 estrellas',
+    lvNone: 'No jugada', lv90: 'Excelente', lv70: 'Logrado', lv50: 'En proceso', lv0: 'Hay que repasar',
+    sPlayer: 'Jugador', sPassed: 'Plantas superadas', sFirst: 'Nota del primer intento', sPoints: 'Puntos', sStars: 'Estrellas', sTime: 'Tiempo de juego',
+    stLocked: 'Cerrada', stTodo: 'Por jugar', stDone: '1.er intento {first}% · mejor {best}%',
+    floorAria: 'Planta {n}: {title}. {status}',
+    floorN: 'Planta {n}', roof: 'Azotea', caShort: 'CE',
+    kSort: [['← →', 'Elige la zona donde cae la caja'], ['↓ o Espacio', 'Déjala caer de golpe (más puntos)'], ['1, 2, 3…', 'Envíala directamente a esa zona'], ['Ratón o dedo', 'Toca una zona para enviar la caja']],
+    kShoot: [['← →', 'Mueve la nave (o arrástrala con el dedo o el ratón)'], ['1, 2, 3…', 'Dispara esa tecnología'], ['Botones', 'Toca una tecnología para dispararla'], ['Línea roja', 'Si un problema la toca, pierdes una vida']],
+    kSnake: [['← ↑ → ↓', 'o W A S D: gira la serpiente'], ['Dedo', 'Desliza o usa las flechas de pantalla'], ['Paredes', 'Si chocas, pierdes una vida'], ['Bloques', 'Cómete solo el bloque que toca']],
+    kWhack: [['Clic o dedo', 'Atrapa la frase que es una trampa'], ['1 a 9', 'Atrapa la ventana con ese número'], ['Frases ciertas', 'Déjalas pasar: también cuentan'], ['Barra lila', 'El tiempo que queda antes de que se vaya']],
+    kBoss: [['← →', 'Elige «Es cierto» o «Es humo»'], ['↓ o Espacio', 'Deja caer la frase de golpe'], ['1 o 2', 'Envíala directamente'], ['Ratón o dedo', 'Toca la zona']],
+    kPause: 'Pausa',
+    waveN: 'Oleada {n} de {m}',
+    waveFirst: 'Tienes 3 vidas por oleada. Los errores te explican el porqué y vuelven a salir más adelante.',
+    waveNext: 'Más rápido que la anterior. Vuelves a tener 3 vidas.',
+    wrongTitle: 'No es correcto',
+    youAnswered: 'Has respondido:',
+    rightAnswer: 'Respuesta correcta:',
+    gotIt: 'Entendido',
+    noLivesTitle: 'Te has quedado sin vidas',
+    noLivesText: 'Vuelves a empezar esta oleada. Lo que ya has respondido a la primera no cambia la nota.',
+    restartWave: 'Vuelve a empezar la oleada',
+    retry: 'Vuelve a intentarlo',
+    repeat: 'Repite',
+    nextFloor: 'Sube a la planta siguiente',
+    repeatDuel: 'Repite el duelo',
+    floorPassed: 'Planta {n} superada',
+    floorFailed: 'Todavía no has superado la planta',
+    firstCount: 'Acierto a la primera: {ok} de {n}.',
+    openedNext: 'Has abierto la planta siguiente.',
+    needPass: 'Necesitas un {p}% para abrir la planta siguiente.',
+    firstNote: 'Este era tu primer intento: es el que sale en el informe. Puedes repetir la planta para mejorar las estrellas.',
+    laterNote: 'El primer intento ({first}%) es el que cuenta en el informe; aquí mejoras las estrellas y el récord.',
+    errNote: 'Errores de este intento: {n}. Los tienes explicados en el informe PDF.',
+    pts: 'pts',
+    victoryTitle: 'Fum se ha ido de la torre',
+    victoryQuote: '«Ya veo que no te puedo vender humo. Me voy a otra ciudad…»',
+    victoryText: 'Has subido las ocho plantas. Tu nota del primer intento es <strong>{s}/100</strong>.',
+    victoryPdf: 'Descarga ahora el informe PDF con tus resultados y entrégalo donde te indique el profesor. También puedes descargarlo más tarde desde la torre.',
+    fumSays: 'Fum dice…',
+    noZone: 'No la has enviado a ninguna zona',
+    before: 'Antes', after: 'Después',
+    lateGiven: 'No lo has resuelto a tiempo',
+    lateTitle: 'El problema ha llegado abajo',
+    orderPrompt: '¿Cuál es el bloque {n} del informe? Cómetelo.',
+    orderSmall: 'Monta el informe · {i} de {n}',
+    matchSmall: '¿Dónde va este contenido? · {i} de {n}',
+    blockN: 'Bloque {n} del informe',
+    orderIs: 'El orden es: {list}.',
+    crashTitle: '¡Choque!',
+    crashText: 'Has chocado con una pared o con la serpiente. Pierdes una vida, pero no cuenta como error de contenido.',
+    cont: 'Continúa',
+    up: 'Arriba', left: 'Izquierda', down: 'Abajo', right: 'Derecha',
+    whackSmall: 'Las trampas de Fum',
+    whackPrompt: 'Atrapa las frases falsas. Deja pasar las ciertas.',
+    whackHitGiven: 'La has atrapado como trampa',
+    whackHitCorrect: 'Es cierta: había que dejarla pasar',
+    whackPassGiven: 'La has dejado pasar',
+    whackPassCorrect: 'Es una trampa: había que atraparla',
+    escapedTitle: 'Se te ha escapado una trampa',
+    popTrap: '¡Trampa!', popTrue: 'Cierta',
+    pauseTitle: 'Pausa',
+    pauseText: 'Si sales ahora, este intento de la planta no se guarda.',
+    pauseLang: 'Canvia a català',
+    pauseLangNote: 'Si cambias de idioma, vuelves a empezar esta oleada en catalán. Lo que ya has respondido a la primera no cambia la nota.',
+    exitTower: 'Sal a la torre',
+    helpText: 'Sube las ocho plantas de la torre. Cada planta trabaja un apartado del RA2 con un juego diferente y tiene tres oleadas, cada vez más rápidas.',
+    thFloor: 'Planta', thGame: 'Juego', thCa: 'CE',
+    help1: 'Cuenta el acierto a la primera del primer intento de cada planta: es la nota del informe.',
+    help2: 'Necesitas un {p}% para abrir la planta siguiente. Puedes repetir plantas para ganar estrellas.',
+    help3: 'Tienes 3 vidas por oleada. Cada error te explica la respuesta correcta y esa pregunta vuelve a salir.',
+    help4: 'Cuando acabes, descarga el informe PDF desde la torre.',
+    resetTitle: '¿Empezar de nuevo?',
+    resetText: 'Se borrarán todos los resultados de este navegador.',
+    cancel: 'Cancelar',
+    resetGo: 'Borra y empieza',
+    savedTitle: 'Ya hay una partida guardada',
+    savedText: 'En este navegador está la partida de <strong>{name} ({group})</strong>. Si empiezas una nueva, se borrará.',
+    savedKeep: 'Continúa la guardada',
+    savedNew: 'Empieza una partida nueva',
+    pdfNoLib: 'No se ha podido cargar el generador de PDF. Comprueba la conexión a Internet y vuelve a cargar la página.',
+    pdfPreparing: 'Preparando el PDF…',
+    pdfDeclined: 'Has cancelado la descarga.',
+    pdfDone: 'Informe preparado. Entrégalo donde te indique el profesor.',
+    pdfError: 'No se ha podido generar el PDF: {m}',
+    pdfFile: '1665_TorreFum_{name}_{group}.pdf',
+    pdfTitle: 'La Torre de Fum · Informe de resultados',
+    pdfSub: 'MP 1665 Digitalización aplicada a los sectores productivos · RA2 · Tecnologías habilitadoras digitales (apartados 3 a 8)',
+    pdfStudent: 'Alumno/a', pdfGroup: 'Grupo', pdfDate: 'Fecha', pdfTime: 'Tiempo de juego', pdfPassed: 'Plantas superadas', pdfOf: '{a} de {b}',
+    pdfScore: 'Nota (primer intento) · {l}',
+    pdfByFloor: 'Resultados por planta',
+    pdfCols: ['Planta', 'Apartado', 'CE', '1.er intento', 'Mejor', 'Estrellas', 'Nivel'],
+    pdfStarsOf: '{n} de 3',
+    pdfNote: 'La nota de cada planta es el porcentaje de aciertos a la primera en el primer intento completo. Niveles: Excelente ≥ 90 · Logrado ≥ 70 · En proceso ≥ 50 · Hay que repasar < 50. Para superar una planta hace falta un 70%.',
+    pdfReview: 'Para repasar',
+    pdfFloorHead: 'Planta {n} · {title} (CE {ca})',
+    pdfRoof: 'azotea',
+    pdfGiven: 'Has respondido: ', pdfCorrect: 'Correcto: ', pdfWhy: 'Por qué: ',
+    pdfNoErrors: 'Ningún error en los primeros intentos de las plantas jugadas.',
+    pdfCode: 'Código de verificación: {code} · {name} · {group}',
+    pdfLang: 'Idioma de la partida: castellano',
+    locale: 'es-ES', numLocale: 'es'
+  }
+};
+
 </script>
 <script>
 'use strict';
-/* ═══════════════ Utilitats ═══════════════ */
+/* ═══════════════ Utilitats i idioma ═══════════════ */
 const $ = (s, r = document) => r.querySelector(s);
-const FLOORS = CONTENT.floors;
 const PASS = 70;
 const KEY = 'torreFum.v1';
-const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const LANG_KEY = 'torreFum.lang';
+const BANKS = { ca: CONTENT, es: CONTENT_ES };
+let LANG = 'ca';
+let FLOORS = CONTENT.floors;
+function T(k, v) {
+  let s = (STR[LANG] && STR[LANG][k] != null) ? STR[LANG][k] : STR.ca[k];
+  if (typeof s === 'string' && v) s = s.replace(/\{(\w+)\}/g, (m, x) => (v[x] != null ? v[x] : m));
+  return s;
+}
 function el(tag, cls, html) { const e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; return e; }
 function esc(s) { return String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
 function shuffle(a) { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
 function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
 function fmtTime(ms) { const m = Math.floor(ms / 60000); const h = Math.floor(m / 60); return h ? `${h} h ${m % 60} min` : `${m} min`; }
-function level(p) { if (p == null) return 'No jugada'; if (p >= 90) return 'Excel·lent'; if (p >= 70) return 'Assolit'; if (p >= 50) return 'En procés'; return 'Cal repassar'; }
+function num(n) { return n.toLocaleString(T('numLocale')); }
+function level(p) { if (p == null) return T('lvNone'); if (p >= 90) return T('lv90'); if (p >= 70) return T('lv70'); if (p >= 50) return T('lv50'); return T('lv0'); }
 function starsFor(p) { return p >= 95 ? 3 : p >= 85 ? 2 : p >= PASS ? 1 : 0; }
-function starsHTML(n) { let s = ''; for (let i = 0; i < 3; i++) s += i < n ? '★' : '<span class="off">★</span>'; return `<span class="stars" aria-label="${n} de 3 estrelles">${s}</span>`; }
+function starsHTML(n) { let s = ''; for (let i = 0; i < 3; i++) s += i < n ? '★' : '<span class="off">★</span>'; return `<span class="stars" aria-label="${T('starsAria', { n })}">${s}</span>`; }
+function floorName(f) { return f.mode === 'boss' ? T('roof') : T('floorN', { n: f.num }); }
 
 function fumSVG(size) {
   return `<svg viewBox="0 0 96 96" width="${size}" height="${size}" aria-hidden="true">
@@ -744,6 +1453,28 @@ function fumSVG(size) {
 }
 const SHIP_SVG = `<svg viewBox="0 0 56 44" width="56" height="44" aria-hidden="true"><path d="M28 2 L40 26 L54 34 L54 42 L2 42 L2 34 L16 26 Z" fill="#ffb547"/><rect x="24" y="0" width="8" height="14" rx="3" fill="#f4f1e8"/><circle cx="28" cy="28" r="5" fill="#12142a"/></svg>`;
 
+function setLang(l, opts = {}) {
+  LANG = l === 'es' ? 'es' : 'ca';
+  FLOORS = BANKS[LANG].floors;
+  document.documentElement.lang = LANG;
+  document.title = T('docTitle');
+  document.querySelectorAll('[data-i18n]').forEach(e => { e.textContent = T(e.dataset.i18n); });
+  document.querySelectorAll('[data-i18n-html]').forEach(e => { e.innerHTML = T(e.dataset.i18nHtml); });
+  document.querySelectorAll('.lang-pick button').forEach(b => b.setAttribute('aria-pressed', b.dataset.lang === LANG ? 'true' : 'false'));
+  try { localStorage.setItem(LANG_KEY, LANG); } catch (e) { /* sense desat */ }
+  if (S) { S.lang = LANG; save(); }
+  if (!opts.silent) {
+    if (screen === 'map') renderMap();
+    else if (screen === 'intro' && introIdx != null) openIntro(introIdx);
+    else if (screen === 'start') refreshContinue();
+  }
+}
+function initialLang() {
+  try { const l = localStorage.getItem(LANG_KEY); if (l === 'ca' || l === 'es') return l; } catch (e) { /* res */ }
+  const nl = (navigator.language || 'ca').toLowerCase();
+  return nl.startsWith('es') ? 'es' : 'ca';
+}
+
 /* ═══════════════ Fons ═══════════════ */
 function drawSky() {
   const c = $('#sky'); const dpr = window.devicePixelRatio || 1;
@@ -754,7 +1485,6 @@ function drawSky() {
   g.fillStyle = grd; g.fillRect(0, 0, w, h);
   let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
   for (let i = 0; i < 140; i++) { g.fillStyle = `rgba(244,241,232,${0.15 + rnd() * 0.5})`; g.fillRect(rnd() * w, rnd() * h * 0.8, 1.5, 1.5); }
-  // perfil de ciutat
   g.fillStyle = '#0b0c1c'; let x = 0;
   while (x < w) { const bw = 30 + rnd() * 60, bh = 40 + rnd() * 110; g.fillRect(x, h - bh, bw, bh); x += bw + 2; }
   g.fillStyle = 'rgba(255,181,71,.18)';
@@ -769,7 +1499,7 @@ function sfx(kind) {
     actx = actx || new (window.AudioContext || window.webkitAudioContext)();
     const o = actx.createOscillator(), gn = actx.createGain(); o.connect(gn); gn.connect(actx.destination);
     const t = actx.currentTime;
-    const P = { ok: ['triangle', 660, 990, .12], bad: ['square', 220, 140, .22], shot: ['sine', 900, 1300, .06], win: ['triangle', 520, 1040, .35], step: ['sine', 300, 320, .02] }[kind];
+    const P = { ok: ['triangle', 660, 990, .12], bad: ['square', 220, 140, .22], shot: ['sine', 900, 1300, .06], win: ['triangle', 520, 1040, .35] }[kind];
     o.type = P[0]; o.frequency.setValueAtTime(P[1], t); o.frequency.exponentialRampToValueAtTime(P[2], t + P[3]);
     gn.gain.setValueAtTime(.08, t); gn.gain.exponentialRampToValueAtTime(.001, t + P[3] + .05);
     o.start(t); o.stop(t + P[3] + .06);
@@ -780,16 +1510,44 @@ function sfx(kind) {
 let S = null;
 function blankState(name, group) {
   const floors = {};
-  FLOORS.forEach(f => { floors[f.id] = { first: null, best: null, stars: 0, attempts: 0, errors: [], firstScore: 0, bestScore: 0 }; });
-  return { v: 1, name, group, created: Date.now(), playMs: 0, sound: true, floors };
+  CONTENT.floors.forEach(f => { floors[f.id] = { first: null, best: null, stars: 0, attempts: 0, errors: [], firstScore: 0, bestScore: 0 }; });
+  return { v: 1, name, group, lang: LANG, created: Date.now(), playMs: 0, sound: true, floors };
 }
 function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { /* sense desat */ } }
 function load() { try { const r = localStorage.getItem(KEY); const s = r ? JSON.parse(r) : null; return s && s.v === 1 && s.floors ? s : null; } catch (e) { return null; } }
 function isUnlocked(i) { if (i === 0) return true; const p = S.floors[FLOORS[i - 1].id]; return (p.best || 0) >= PASS; }
 function globalScore() { return Math.round(FLOORS.reduce((a, f) => a + (S.floors[f.id].first || 0), 0) / FLOORS.length); }
 
+/* ═══════════════ Errades: forma neutra i text en l'idioma actiu ═══════════════ */
+// err = { fid, key, w (onada), g (resposta donada: índex, codi, 'late', 'hit', 'pass' o null) }
+function describe(err) {
+  if (err.q != null) return { q: err.q, given: err.given, correct: err.correct, e: err.e }; // format antic
+  const f = FLOORS.find(x => x.id === err.fid);
+  const parts = String(err.key).split(':');
+  if (f.mode === 'snake' && parts[1] === 'ordre') {
+    const i = +parts[2];
+    return { q: T('blockN', { n: i + 1 }), given: f.blocks[err.g], correct: f.blocks[i], e: T('orderIs', { list: f.blocks.map((b, j) => (j + 1) + ' ' + b).join(' · ') }) };
+  }
+  const it = f.items[+parts[1]];
+  if (f.mode === 'sort' || f.mode === 'boss') {
+    const bins = (f.waves[err.w] && f.waves[err.w].bins) || f.bins;
+    return { q: it.t, given: err.g == null ? T('noZone') : bins[err.g], correct: bins[it.a], e: it.e };
+  }
+  if (f.mode === 'shoot') {
+    return { q: T('before') + ': ' + it.t, given: err.g === 'late' ? T('lateGiven') : f.ammo[err.g], correct: `${f.ammo[it.a]} → ${it.d}`, e: it.e, title: err.g === 'late' ? T('lateTitle') : null };
+  }
+  if (f.mode === 'snake') return { q: it.t, given: f.blocks[err.g], correct: f.blocks[it.a], e: it.e };
+  if (f.mode === 'whack') {
+    return err.g === 'hit'
+      ? { q: it.t, given: T('whackHitGiven'), correct: T('whackHitCorrect'), e: it.e }
+      : { q: it.t, given: T('whackPassGiven'), correct: T('whackPassCorrect'), e: it.e, title: T('escapedTitle') };
+  }
+  return { q: it.t, given: String(err.g), correct: '', e: it.e };
+}
+
 /* ═══════════════ Pantalles ═══════════════ */
 let screen = 'start';
+let introIdx = null;
 function show(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.toggle('on', s.id === 'scr-' + id));
   screen = id; window.scrollTo(0, 0);
@@ -799,45 +1557,41 @@ function renderMap() {
   const passed = FLOORS.filter(f => (S.floors[f.id].best || 0) >= PASS).length;
   const total = FLOORS.reduce((a, f) => a + S.floors[f.id].bestScore, 0);
   $('#summary').innerHTML = `
-    <div><div class="k">Jugador</div><div style="font-weight:700">${esc(S.name)} · ${esc(S.group)}</div></div>
-    <div><div class="k">Plantes superades</div><div class="v">${passed}/${FLOORS.length}</div></div>
-    <div><div class="k">Nota del primer intent</div><div class="v">${globalScore()}/100</div></div>
-    <div><div class="k">Punts</div><div class="v">${total.toLocaleString('ca')}</div></div>
-    <div><div class="k">Estrelles</div><div class="v">${FLOORS.reduce((a, f) => a + S.floors[f.id].stars, 0)}/${FLOORS.length * 3}</div></div>
-    <div><div class="k">Temps de joc</div><div class="v">${fmtTime(S.playMs)}</div></div>`;
+    <div><div class="k">${T('sPlayer')}</div><div style="font-weight:700">${esc(S.name)} · ${esc(S.group)}</div></div>
+    <div><div class="k">${T('sPassed')}</div><div class="v">${passed}/${FLOORS.length}</div></div>
+    <div><div class="k">${T('sFirst')}</div><div class="v">${globalScore()}/100</div></div>
+    <div><div class="k">${T('sPoints')}</div><div class="v">${num(total)}</div></div>
+    <div><div class="k">${T('sStars')}</div><div class="v">${FLOORS.reduce((a, f) => a + S.floors[f.id].stars, 0)}/${FLOORS.length * 3}</div></div>
+    <div><div class="k">${T('sTime')}</div><div class="v">${fmtTime(S.playMs)}</div></div>`;
   const tw = $('#tower'); tw.innerHTML = '';
   for (let i = FLOORS.length - 1; i >= 0; i--) {
     const f = FLOORS[i], st = S.floors[f.id], open = isUnlocked(i), done = (st.best || 0) >= PASS;
     const b = el('button', 'floor' + (open ? ' open' : ' locked') + (done ? ' done' : '') + (f.mode === 'boss' ? ' top' : ''));
     b.type = 'button'; b.disabled = !open;
-    const status = !open ? 'Tancada' : st.best == null ? 'Per jugar' : `1r intent ${st.first}% · millor ${st.best}%`;
+    const status = !open ? T('stLocked') : st.best == null ? T('stTodo') : T('stDone', { first: st.first, best: st.best });
     b.innerHTML = `<div class="n">${f.mode === 'boss' ? 'T' : f.num}</div>
-      <div><div class="t">${esc(f.title)}</div><div class="s">${esc(f.apt)} · CA ${esc(f.ca)}</div></div>
+      <div><div class="t">${esc(f.title)}</div><div class="s">${esc(f.apt)} · ${T('caShort')} ${esc(f.ca)}</div></div>
       <div class="r">${starsHTML(st.stars)}<br>${status}</div>`;
-    b.setAttribute('aria-label', `Planta ${f.num}: ${f.title}. ${status}`);
+    b.setAttribute('aria-label', T('floorAria', { n: f.num, title: f.title, status }));
     if (open) b.addEventListener('click', () => openIntro(i));
     tw.appendChild(b);
   }
-  $('#b-sound').textContent = 'So: ' + (S.sound ? 'sí' : 'no');
+  $('#b-sound').textContent = S.sound ? T('soundOn') : T('soundOff');
   $('#b-sound').setAttribute('aria-pressed', S.sound ? 'true' : 'false');
+  $('#b-lang').textContent = T('langSwitch');
+  $('#b-lang').setAttribute('aria-label', T('langSwitchAria'));
 }
 
-const CONTROLS = {
-  sort: [['← →', 'Tria la zona on cau la caixa'], ['↓ o Espai', 'Deixa-la caure de cop (més punts)'], ['1, 2, 3…', 'Envia-la directament a aquella zona'], ['Ratolí o dit', 'Toca una zona per enviar-hi la caixa']],
-  shoot: [['← →', 'Mou la nau (o arrossega-la amb el dit o el ratolí)'], ['1, 2, 3…', 'Dispara aquella tecnologia'], ['Botons', 'Toca una tecnologia per disparar-la'], ['Línia vermella', 'Si un problema la toca, perds una vida']],
-  snake: [['← ↑ → ↓', 'o W A S D: gira la serp'], ['Dit', 'Llisca o fes servir les fletxes de pantalla'], ['Parets', 'Si hi xoques, perds una vida'], ['Blocs', 'Menja només el bloc que toca']],
-  whack: [['Clic o dit', 'Atrapa la frase que és una trampa'], ['1 a 9', 'Atrapa la finestra amb aquest número'], ['Frases certes', 'Deixa-les passar: també compten'], ['Barra lila', 'El temps que queda abans que marxi']],
-  boss: [['← →', 'Tria «És cert» o «És fum»'], ['↓ o Espai', 'Deixa caure la frase de cop'], ['1 o 2', 'Envia-la directament'], ['Ratolí o dit', 'Toca la zona']]
-};
+const CONTROL_KEYS = { sort: 'kSort', shoot: 'kShoot', snake: 'kSnake', whack: 'kWhack', boss: 'kBoss' };
 function openIntro(i) {
-  const f = FLOORS[i];
-  $('#intro-chip').textContent = f.mode === 'boss' ? 'Terrat' : `Planta ${f.num}`;
-  $('#intro-ca').textContent = `${f.apt} · CA ${f.ca}`;
+  const f = FLOORS[i]; introIdx = i;
+  $('#intro-chip').textContent = floorName(f);
+  $('#intro-ca').textContent = `${f.apt} · ${T('caShort')} ${f.ca}`;
   $('#t-intro').textContent = f.title;
   $('#intro-tag').textContent = f.tagline;
   $('#intro-recap').innerHTML = f.recap.map(r => `<li>${esc(r)}</li>`).join('');
-  $('#intro-keys').innerHTML = CONTROLS[f.mode].map(k => `<div><kbd>${esc(k[0])}</kbd></div><div>${esc(k[1])}</div>`).join('') +
-    `<div><kbd>P</kbd></div><div>Pausa</div>`;
+  $('#intro-keys').innerHTML = T(CONTROL_KEYS[f.mode]).map(k => `<div><kbd>${esc(k[0])}</kbd></div><div>${esc(k[1])}</div>`).join('') +
+    `<div><kbd>P</kbd></div><div>${T('kPause')}</div>`;
   $('#b-intro-go').onclick = () => startFloor(i);
   show('intro');
   $('#b-intro-go').focus();
@@ -869,10 +1623,12 @@ function startFloor(i) {
   const f = FLOORS[i];
   R = { f, idx: i, wave: -1, seen: new Set(), requeued: new Set(), used: new Set(), firstOk: 0, firstN: 0, errors: [], score: 0, combo: 0, lives: 3 };
   R.mode = MODES[f.mode];
-  $('#h-floor').textContent = f.mode === 'boss' ? 'Terrat' : `${f.num} · ${f.title}`;
+  setFloorLabel();
   show('game');
   nextWave();
 }
+function setFloorLabel() { $('#h-floor').textContent = R.f.mode === 'boss' ? T('roof') : `${R.f.num} · ${R.f.title}`; }
+function itemByKey(key) { return { ...R.f.items[+String(key).split(':')[1]], key }; }
 function buildQueue() {
   const f = R.f, w = R.w;
   let pool = f.items.map((it, k) => ({ ...it, key: f.id + ':' + k }));
@@ -891,11 +1647,11 @@ function nextWave() {
   R.w = R.f.waves[R.wave];
   hud();
   const n = R.f.waves.length;
-  const what = R.f.mode === 'boss' ? R.w.label : `Onada ${R.wave + 1} de ${n}`;
+  const what = R.f.mode === 'boss' ? R.w.label : T('waveN', { n: R.wave + 1, m: n });
   overlay({
     title: what, cls: 'amber',
-    html: `<p>${esc(R.w.label && R.f.mode !== 'boss' ? R.w.label : R.f.tagline)}</p><p class="note">${R.wave === 0 ? 'Tens 3 vides per onada. Les errades t\'expliquen el perquè i tornen a sortir més endavant.' : 'Més ràpid que l\'anterior. Tornes a tenir 3 vides.'}</p>`,
-    buttons: [{ label: 'Som-hi', primary: true, action: beginWave }]
+    html: `<p>${esc(R.w.label && R.f.mode !== 'boss' ? R.w.label : R.f.tagline)}</p><p class="note">${R.wave === 0 ? T('waveFirst') : T('waveNext')}</p>`,
+    buttons: [{ label: T('go'), primary: true, action: beginWave }]
   });
 }
 function beginWave() {
@@ -907,6 +1663,13 @@ function restartWave() {
   R.lives = 3; R.queue = R.waveItems.slice(); R.combo = 0;
   clearField(); R.mode.start(); hud(); G.paused = false;
 }
+// Canvi d'idioma enmig d'una planta: es reprèn la mateixa onada amb els textos nous
+function switchLangInGame() {
+  setLang(LANG === 'ca' ? 'es' : 'ca', { silent: true });
+  R.f = FLOORS[R.idx]; R.mode = MODES[R.f.mode]; R.w = R.f.waves[R.wave];
+  R.waveItems = R.waveItems.map(it => itemByKey(it.key));
+  setFloorLabel(); restartWave();
+}
 function clearField() {
   const fd = $('#field'); fd.innerHTML = '<div class="grid-bg"></div>'; fd.onpointermove = fd.onpointerdown = fd.onpointerup = null;
   $('#below').innerHTML = ''; $('#prompt').className = 'prompt'; $('#prompt').innerHTML = '';
@@ -914,36 +1677,37 @@ function clearField() {
 function hud() {
   if (!R) return;
   $('#h-wave').textContent = `${Math.max(1, R.wave + 1)}/${R.f.waves.length}`;
-  $('#h-score').textContent = R.score.toLocaleString('ca');
+  $('#h-score').textContent = num(R.score);
   $('#h-combo').textContent = '×' + (1 + Math.floor(R.combo / 5));
   $('#h-acc').textContent = R.firstN ? Math.round(R.firstOk / R.firstN * 100) + '%' : '–';
   let h = ''; for (let i = 0; i < 3; i++) h += i < R.lives ? '♥' : '<span class="off">♥</span>';
-  $('#h-lives').innerHTML = h; $('#h-lives').setAttribute('aria-label', R.lives + ' vides');
+  $('#h-lives').innerHTML = h; $('#h-lives').setAttribute('aria-label', T('livesAria', { n: R.lives }));
 }
 // Registra una resposta. Només compta per a la nota la primera vegada que surt cada ítem en aquest intent.
-function record(key, ok, info, pts = 100) {
+function record(key, ok, err, pts = 100) {
   if (!R.seen.has(key)) {
     R.seen.add(key); R.firstN++;
-    if (ok) R.firstOk++; else R.errors.push({ q: info.q, given: info.given, correct: info.correct, e: info.e });
+    if (ok) R.firstOk++; else R.errors.push(err);
   }
   if (ok) { R.combo++; const gain = pts * (1 + Math.floor(R.combo / 5)); R.score += gain; sfx('ok'); hud(); return gain; }
   R.combo = 0; sfx('bad'); hud(); return 0;
 }
-function fail(info, then) {
+function mkErr(key, g) { return { fid: R.f.id, key, w: R.wave, g }; }
+function fail(err, then) {
   R.lives--; hud();
+  const d = describe(err);
   overlay({
-    title: info.title || 'No és correcte', cls: 'bad',
-    html: `<div class="q">${esc(info.q)}</div>
-      ${info.given ? `<p>Has respost: <span class="given">${esc(info.given)}</span></p>` : ''}
-      <p>Resposta correcta: <span class="ans">${esc(info.correct)}</span></p>
-      <p>${esc(info.e)}</p>`,
+    title: d.title || T('wrongTitle'), cls: 'bad',
+    html: `<div class="q">${esc(d.q)}</div>
+      ${d.given ? `<p>${T('youAnswered')} <span class="given">${esc(d.given)}</span></p>` : ''}
+      <p>${T('rightAnswer')} <span class="ans">${esc(d.correct)}</span></p>
+      <p>${esc(d.e)}</p>`,
     buttons: [{
-      label: 'Entesos', primary: true, action: () => {
+      label: T('gotIt'), primary: true, action: () => {
         if (R.lives <= 0) {
           overlay({
-            title: 'T\'has quedat sense vides', cls: 'bad',
-            html: '<p>Tornes a començar aquesta onada. El que ja has respost a la primera no canvia la nota.</p>',
-            buttons: [{ label: 'Torna a començar l\'onada', primary: true, action: restartWave }]
+            title: T('noLivesTitle'), cls: 'bad', html: `<p>${T('noLivesText')}</p>`,
+            buttons: [{ label: T('restartWave'), primary: true, action: restartWave }]
           });
         } else { G.paused = false; then && then(); }
       }
@@ -965,30 +1729,30 @@ function endFloor() {
   st.best = Math.max(st.best || 0, acc); st.stars = Math.max(st.stars, starsFor(acc)); st.bestScore = Math.max(st.bestScore, R.score);
   save();
   const pass = acc >= PASS, last = R.idx === FLOORS.length - 1;
-  const btns = [{ label: 'Torna a la torre', primary: pass && last, action: () => { renderMap(); show('map'); } }];
-  if (!pass) btns.push({ label: 'Torna-ho a provar', primary: true, action: () => startFloor(R.idx) });
-  else if (!last) btns.push({ label: 'Repeteix', action: () => startFloor(R.idx) }, { label: 'Puja a la planta següent', primary: true, action: () => openIntro(R.idx + 1) });
-  else btns.push({ label: 'Repeteix el duel', action: () => startFloor(R.idx) });
+  const btns = [{ label: T('back'), primary: pass && last, action: () => { renderMap(); show('map'); } }];
+  if (!pass) btns.push({ label: T('retry'), primary: true, action: () => startFloor(R.idx) });
+  else if (!last) btns.push({ label: T('repeat'), action: () => startFloor(R.idx) }, { label: T('nextFloor'), primary: true, action: () => openIntro(R.idx + 1) });
+  else btns.push({ label: T('repeatDuel'), action: () => startFloor(R.idx) });
   if (pass && last) { victory(acc, btns); return; }
   overlay({
-    title: pass ? `Planta ${R.f.num} superada` : 'Encara no has superat la planta', cls: pass ? 'ok' : 'bad',
-    html: `<div class="row"><div class="bigstat">${acc}%</div>${starsHTML(starsFor(acc))}<span class="spacer"></span><div class="bigstat" style="font-size:18px">${R.score.toLocaleString('ca')} pts</div></div>
-      <p>Encert a la primera: ${R.firstOk} de ${R.firstN}. ${pass ? 'Has obert la planta següent.' : `Necessites un ${PASS}% per obrir la planta següent.`}</p>
-      ${firstTime ? '<p class="note">Aquest era el teu primer intent: és el que surt a l\'informe. Pots repetir la planta per millorar les estrelles.</p>' : `<p class="note">El primer intent (${st.first}%) és el que compta a l'informe; aquí millores les estrelles i el rècord.</p>`}
-      ${R.errors.length ? `<p class="note">Errades d'aquest intent: ${R.errors.length}. Les tens explicades a l'informe PDF.</p>` : ''}`,
+    title: pass ? T('floorPassed', { n: R.f.num }) : T('floorFailed'), cls: pass ? 'ok' : 'bad',
+    html: `<div class="row"><div class="bigstat">${acc}%</div>${starsHTML(starsFor(acc))}<span class="spacer"></span><div class="bigstat" style="font-size:18px">${num(R.score)} ${T('pts')}</div></div>
+      <p>${T('firstCount', { ok: R.firstOk, n: R.firstN })} ${pass ? T('openedNext') : T('needPass', { p: PASS })}</p>
+      <p class="note">${firstTime ? T('firstNote') : T('laterNote', { first: st.first })}</p>
+      ${R.errors.length ? `<p class="note">${T('errNote', { n: R.errors.length })}</p>` : ''}`,
     buttons: btns
   });
 }
 function victory(acc, btns) {
   sfx('win');
   btns.forEach(b => { b.primary = false; });
-  btns.push({ label: 'Descarrega l\'informe PDF', primary: true, action: () => { renderMap(); show('map'); downloadPDF(); } });
+  btns.push({ label: T('pdfBtn'), primary: true, action: () => { renderMap(); show('map'); downloadPDF(); } });
   overlay({
-    title: 'En Fum ha marxat de la torre', cls: 'ok',
-    html: `<div class="row">${fumSVG(64)}<p>«Ja veig que no et puc vendre fum. Me'n vaig a una altra ciutat…»</p></div>
+    title: T('victoryTitle'), cls: 'ok',
+    html: `<div class="row">${fumSVG(64)}<p>${T('victoryQuote')}</p></div>
       <div class="row"><div class="bigstat">${acc}%</div>${starsHTML(starsFor(acc))}</div>
-      <p>Has pujat les vuit plantes. La teva nota del primer intent és <strong>${globalScore()}/100</strong>.</p>
-      <p>Descarrega ara l'informe PDF amb els teus resultats i lliura'l on t'indiqui el professor. També el pots descarregar més tard des de la torre.</p>`,
+      <p>${T('victoryText', { s: globalScore() })}</p>
+      <p>${T('victoryPdf')}</p>`,
     buttons: btns
   });
 }
@@ -1016,7 +1780,7 @@ MODES.sort = {
   binX(i) { const b = this.binsEl.children[i]; return b.offsetLeft + b.offsetWidth / 2; },
   spawn() {
     const item = R.queue.shift(); const fd = $('#field');
-    const c = el('div', 'card' + (this.boss ? ' fumcard' : ''), `${this.boss ? '<span class="tag">En Fum diu…</span>' : ''}${esc(item.t)}`);
+    const c = el('div', 'card' + (this.boss ? ' fumcard' : ''), `${this.boss ? `<span class="tag">${T('fumSays')}</span>` : ''}${esc(item.t)}`);
     fd.appendChild(c);
     const W = fd.clientWidth, cw = c.offsetWidth, ch = c.offsetHeight;
     const land = fd.clientHeight - this.binsEl.offsetHeight - ch - 8;
@@ -1054,15 +1818,15 @@ MODES.sort = {
     const sel = this.sel, ok = sel === it.a, binEl = sel != null ? this.binsEl.children[sel] : null;
     const flashEl = binEl || this.binsEl.children[it.a];
     flashEl.classList.add(ok ? 'flash-ok' : 'flash-bad'); setTimeout(() => flashEl.classList.remove('flash-ok', 'flash-bad'), 380);
-    const given = sel == null ? 'No l\'has enviat a cap zona' : this.bins[sel];
-    const gain = record(it.key, ok, { q: it.t, given, correct: this.bins[it.a], e: it.e }, 100 + c.bonus);
+    const err = mkErr(it.key, sel == null ? null : sel);
+    const gain = record(it.key, ok, err, 100 + c.bonus);
     this.sel = this.n % 2 ? (this.n - 1) / 2 : null; this.mark();
     if (ok) {
       popAt(this.binX(it.a) - 20, $('#field').clientHeight - this.binsEl.offsetHeight - 30, '+' + gain);
       if (this.boss) { this.hp--; this.bossEl.querySelector('.hp > i').style.width = (this.hp / this.hpMax * 100) + '%'; this.bossEl.querySelector('.bosstxt').textContent = `Fum ${this.hp}/${this.hpMax}`; }
     } else {
       if (this.boss) R.queue.push(it); else requeue(it);
-      fail({ q: it.t, given, correct: this.bins[it.a], e: it.e });
+      fail(err);
     }
   }
 };
@@ -1091,7 +1855,7 @@ MODES.shoot = {
   placeShip() { this.ship.style.transform = `translateX(${this.x}px)`; },
   spawn() {
     const it = R.queue.shift(); const fd = $('#field');
-    const c = el('div', 'scard', `<span class="tag">Abans</span>${esc(it.t)}`); fd.appendChild(c);
+    const c = el('div', 'scard', `<span class="tag">${T('before')}</span>${esc(it.t)}`); fd.appendChild(c);
     const w = c.offsetWidth, h = c.offsetHeight;
     let x = Math.random() * (this.W - w);
     const other = this.cards.find(k => !k.done);
@@ -1131,19 +1895,19 @@ MODES.shoot = {
   },
   hit(k, code) {
     const it = k.it, ok = code === it.a;
-    const info = { q: 'Abans: ' + it.t, given: R.f.ammo[code], correct: `${R.f.ammo[it.a]} → ${it.d}`, e: it.e };
-    const gain = record(it.key, ok, info, 100 + Math.round(60 * (1 - k.y / this.H)));
+    const err = mkErr(it.key, code);
+    const gain = record(it.key, ok, err, 100 + Math.round(60 * (1 - k.y / this.H)));
     if (ok) {
-      k.done = true; k.el.classList.add('ok'); k.el.innerHTML = `<span class="tag">Després · ${esc(R.f.ammo[it.a])}</span>${esc(it.d)}`;
+      k.done = true; k.el.classList.add('ok'); k.el.innerHTML = `<span class="tag">${T('after')} · ${esc(R.f.ammo[it.a])}</span>${esc(it.d)}`;
       popAt(k.x + 10, k.y, '+' + gain);
     } else {
-      k.el.remove(); k.gone = true; this.cards = this.cards.filter(c => c !== k); requeue(it); fail(info);
+      k.el.remove(); k.gone = true; this.cards = this.cards.filter(c => c !== k); requeue(it); fail(err);
     }
   },
   miss(k) {
     const it = k.it; k.el.remove(); k.gone = true; this.cards = this.cards.filter(c => c !== k);
-    const info = { q: 'Abans: ' + it.t, given: 'No l\'has resolt a temps', correct: `${R.f.ammo[it.a]} → ${it.d}`, e: it.e, title: 'El problema ha arribat a baix' };
-    record(it.key, false, info); requeue(it); fail(info);
+    const err = mkErr(it.key, 'late');
+    record(it.key, false, err); requeue(it); fail(err);
   },
   key(e) {
     const k = e.key;
@@ -1166,19 +1930,17 @@ MODES.snake = {
     cv.width = W * dpr; cv.height = H * dpr; fd.appendChild(cv); this.g = cv.getContext('2d'); this.g.scale(dpr, dpr); this.W = W; this.H = H;
     this.labels = el('div'); fd.appendChild(this.labels);
     this.blocks = R.f.blocks; this.kind = R.w.kind;
-    if (this.kind === 'order') this.prompts = this.blocks.map((b, i) => ({ key: R.f.id + ':ordre:' + i, t: null, a: i, e: `L'ordre és: ${this.blocks.map((x, j) => (j + 1) + ' ' + x).join(' · ')}.` }));
+    if (this.kind === 'order') this.prompts = this.blocks.map((b, i) => ({ key: R.f.id + ':ordre:' + i, t: null, a: i }));
     else this.prompts = R.queue.splice(0);
-    this.pi = 0; this.eaten = [];
+    this.pi = 0;
     this.resetSnake(); this.step = .23 / R.w.speed; this.acc = 0;
     $('#prompt').classList.add('on');
-    // controls tàctils
-    const dp = el('div', 'dpad on', `<button type="button" class="u" aria-label="Amunt">▲</button><button type="button" class="l" aria-label="Esquerra">◀</button><button type="button" class="d" aria-label="Avall">▼</button><button type="button" class="r" aria-label="Dreta">▶</button>`);
+    const dp = el('div', 'dpad on', `<button type="button" class="u" aria-label="${T('up')}">▲</button><button type="button" class="l" aria-label="${T('left')}">◀</button><button type="button" class="d" aria-label="${T('down')}">▼</button><button type="button" class="r" aria-label="${T('right')}">▶</button>`);
     [['u', 0, -1], ['l', -1, 0], ['d', 0, 1], ['r', 1, 0]].forEach(([c, x, y]) => dp.querySelector('.' + c).addEventListener('pointerdown', ev => { ev.preventDefault(); this.turn(x, y); }));
     $('#below').appendChild(dp);
     let sx = 0, sy = 0;
     fd.onpointerdown = ev => { sx = ev.clientX; sy = ev.clientY; };
     fd.onpointerup = ev => { const dx = ev.clientX - sx, dy = ev.clientY - sy; if (Math.max(Math.abs(dx), Math.abs(dy)) < 24) return; if (Math.abs(dx) > Math.abs(dy)) this.turn(Math.sign(dx), 0); else this.turn(0, Math.sign(dy)); };
-    fd.onpointermove = null;
     this.showPrompt(); this.placeTiles(); this.draw();
   },
   resetSnake() {
@@ -1191,8 +1953,8 @@ MODES.snake = {
     const p = this.cur(); const pr = $('#prompt');
     const strip = this.kind === 'order' ? `<div class="report-strip" style="margin-top:6px">${this.blocks.map((b, i) => `<span class="${i < this.pi ? 'done' : ''}">${i < this.pi ? (i + 1) + ' ' + esc(b) : (i + 1) + ' ?'}</span>`).join('')}</div>` : '';
     pr.innerHTML = this.kind === 'order'
-      ? `<small>Munta l'informe · ${this.pi + 1} de ${this.prompts.length}</small>Quin és el bloc ${this.pi + 1} de l'informe? Menja'l.${strip}`
-      : `<small>On va aquest contingut? · ${this.pi + 1} de ${this.prompts.length}</small>«${esc(p.t)}»`;
+      ? `<small>${T('orderSmall', { i: this.pi + 1, n: this.prompts.length })}</small>${T('orderPrompt', { n: this.pi + 1 })}${strip}`
+      : `<small>${T('matchSmall', { i: this.pi + 1, n: this.prompts.length })}</small>«${esc(p.t)}»`;
   },
   placeTiles() {
     const p = this.cur(); const n = R.w.tiles;
@@ -1214,7 +1976,6 @@ MODES.snake = {
       l.style.left = (this.ox + (t.x + .5) * this.cell) + 'px'; l.style.top = top + 'px';
       this.labels.appendChild(l); t.lbl = l;
     }
-    // ajusta etiquetes que surten pels costats
     for (const t of this.tiles) { const r = t.lbl.offsetWidth / 2, cx = this.ox + (t.x + .5) * this.cell; if (cx - r < 2) t.lbl.style.left = (r + 2) + 'px'; if (cx + r > this.W - 2) t.lbl.style.left = (this.W - r - 2) + 'px'; }
   },
   turn(x, y) { if (G.paused) return; if (x === -this.dir.x && y === -this.dir.y) return; this.next = { x, y }; },
@@ -1233,9 +1994,8 @@ MODES.snake = {
   },
   eat(t) {
     const p = this.cur(), ok = t.b === p.a;
-    const q = this.kind === 'order' ? `Bloc ${p.a + 1} de l'informe` : p.t;
-    const info = { q, given: this.blocks[t.b], correct: this.blocks[p.a], e: p.e };
-    const gain = record(p.key, ok, info, 120);
+    const err = mkErr(p.key, t.b);
+    const gain = record(p.key, ok, err, 120);
     if (ok) {
       this.grow += 1; popAt(this.ox + t.x * this.cell, this.oy + t.y * this.cell - 10, '+' + gain);
       this.pi++;
@@ -1243,15 +2003,15 @@ MODES.snake = {
       this.showPrompt(); this.placeTiles();
     } else {
       this.body.pop(); this.tiles = this.tiles.filter(x => x !== t); t.lbl.remove(); this.draw();
-      fail(info, () => this.placeTiles());
+      fail(err, () => this.placeTiles());
     }
   },
   crash() {
     R.lives--; R.combo = 0; hud(); sfx('bad');
     const after = () => { this.resetSnake(); this.placeTiles(); this.draw(); };
     if (R.lives <= 0) {
-      overlay({ title: 'T\'has quedat sense vides', cls: 'bad', html: '<p>Tornes a començar aquesta onada. El que ja has respost a la primera no canvia la nota.</p>', buttons: [{ label: 'Torna a començar l\'onada', primary: true, action: () => { R.queue = this.kind === 'order' ? [] : this.prompts.slice(); R.waveItems = R.queue.slice(); restartWave(); } }] });
-    } else overlay({ title: 'Xoc!', cls: 'bad', html: '<p>Has xocat amb una paret o amb la serp. Perds una vida, però no compta com a errada de contingut.</p>', buttons: [{ label: 'Continua', primary: true, action: () => { after(); G.paused = false; } }] });
+      overlay({ title: T('noLivesTitle'), cls: 'bad', html: `<p>${T('noLivesText')}</p>`, buttons: [{ label: T('restartWave'), primary: true, action: restartWave }] });
+    } else overlay({ title: T('crashTitle'), cls: 'bad', html: `<p>${T('crashText')}</p>`, buttons: [{ label: T('cont'), primary: true, action: () => { after(); G.paused = false; } }] });
   },
   draw() {
     const g = this.g, c = this.cell; g.clearRect(0, 0, this.W, this.H);
@@ -1282,7 +2042,7 @@ MODES.whack = {
     }
     fd.appendChild(g); this.active = []; this.gap = .5; this.dur = 8.5 / R.w.speed; this.max = R.w.max;
     $('#prompt').classList.add('on');
-    $('#prompt').innerHTML = '<small>Les trampes d\'en Fum</small>Atrapa les frases falses. Deixa passar les certes.';
+    $('#prompt').innerHTML = `<small>${T('whackSmall')}</small>${T('whackPrompt')}`;
   },
   update(dt) {
     this.gap -= dt;
@@ -1307,18 +2067,18 @@ MODES.whack = {
   hit(slot) {
     if (G.paused) return; const a = this.active.find(x => x.slot === slot); if (!a) return;
     const it = a.it, ok = it.a === 1; this.clear(a, ok ? 'hit-ok' : 'hit-bad');
-    const info = { q: it.t, given: 'L\'has atrapada com a trampa', correct: 'És certa: calia deixar-la passar', e: it.e };
-    const gain = record(it.key, ok, info, 120);
+    const err = mkErr(it.key, 'hit');
+    const gain = record(it.key, ok, err, 120);
     const w = this.wins[slot];
-    if (ok) popAt(w.offsetLeft + 20, w.offsetTop + 20, 'Trampa! +' + gain);
-    else { requeue(it); fail(info); }
+    if (ok) popAt(w.offsetLeft + 20, w.offsetTop + 20, T('popTrap') + ' +' + gain);
+    else { requeue(it); fail(err); }
   },
   expire(a) {
     const it = a.it, ok = it.a === 0; this.clear(a, ok ? null : 'hit-bad');
-    const info = { q: it.t, given: 'L\'has deixat passar', correct: 'És una trampa: calia atrapar-la', e: it.e, title: 'Se t\'ha escapat una trampa' };
-    const gain = record(it.key, ok, info, 60);
-    if (ok) { const w = this.wins[a.slot]; popAt(w.offsetLeft + 20, w.offsetTop + 20, 'Certa +' + gain); }
-    else { requeue(it); fail(info); }
+    const err = mkErr(it.key, 'pass');
+    const gain = record(it.key, ok, err, 60);
+    if (ok) { const w = this.wins[a.slot]; popAt(w.offsetLeft + 20, w.offsetTop + 20, T('popTrue') + ' +' + gain); }
+    else { requeue(it); fail(err); }
   },
   key(e) { const d = parseInt(e.key, 10); if (d >= 1 && d <= 9) { this.hit(d - 1); return true; } return false; }
 };
@@ -1336,8 +2096,12 @@ function loop(t) {
 function pauseGame() {
   if (screen !== 'game' || OV.open) return;
   overlay({
-    title: 'Pausa', cls: 'amber', html: '<p>Si surts ara, aquest intent de la planta no es desa.</p>',
-    buttons: [{ label: 'Surt a la torre', action: () => { R = null; renderMap(); show('map'); } }, { label: 'Continua', primary: true, action: () => { G.paused = false; } }]
+    title: T('pauseTitle'), cls: 'amber', html: `<p>${T('pauseText')}</p><p class="note">${T('pauseLangNote')}</p>`,
+    buttons: [
+      { label: T('exitTower'), action: () => { R = null; renderMap(); show('map'); } },
+      { label: T('pauseLang'), action: switchLangInGame },
+      { label: T('cont'), primary: true, action: () => { G.paused = false; } }
+    ]
   });
 }
 document.addEventListener('keydown', e => {
@@ -1373,45 +2137,49 @@ async function saveFile(blob, filename) {
 function buildPDF() {
   const { jsPDF } = window.jspdf; const doc = new jsPDF({ unit: 'mm', format: 'a4' });
   const M = 16, PW = 210, PH = 297, CW = PW - 2 * M; let y = 18;
-  const T = (s, x, yy, o) => doc.text(pdfText(s), x, yy, o);
+  const Tx = (s, x, yy, o) => doc.text(pdfText(s), x, yy, o);
   const need = h => { if (y + h > PH - 18) { doc.addPage(); y = 18; } };
   doc.setFillColor(18, 20, 42); doc.rect(0, 0, PW, 30, 'F');
-  doc.setTextColor(255, 181, 71); doc.setFont('helvetica', 'bold'); doc.setFontSize(18); T("La Torre d'en Fum · Informe de resultats", M, 14);
-  doc.setTextColor(220, 220, 235); doc.setFont('helvetica', 'normal'); doc.setFontSize(10);
-  T('MP 1665 Digitalització aplicada als sectors productius · RA2 · Tecnologies habilitadores digitals (apartats 3 a 8)', M, 22);
+  doc.setTextColor(255, 181, 71); doc.setFont('helvetica', 'bold'); doc.setFontSize(18); Tx(T('pdfTitle'), M, 14);
+  doc.setTextColor(220, 220, 235); doc.setFont('helvetica', 'normal'); doc.setFontSize(9.5);
+  Tx(T('pdfSub'), M, 22);
   y = 40; doc.setTextColor(25, 25, 35); doc.setFontSize(11);
   const passed = FLOORS.filter(f => (S.floors[f.id].best || 0) >= PASS).length;
-  const rows = [['Alumne/a', S.name], ['Grup', S.group], ['Data', new Date().toLocaleDateString('ca-ES')], ['Temps de joc', fmtTime(S.playMs)], ['Plantes superades', `${passed} de ${FLOORS.length}`]];
-  rows.forEach(([k, v]) => { doc.setFont('helvetica', 'bold'); T(k + ':', M, y); doc.setFont('helvetica', 'normal'); T(v, M + 38, y); y += 6.5; });
+  const rows = [[T('pdfStudent'), S.name], [T('pdfGroup'), S.group], [T('pdfDate'), new Date().toLocaleDateString(T('locale'))], [T('pdfTime'), fmtTime(S.playMs)], [T('pdfPassed'), T('pdfOf', { a: passed, b: FLOORS.length })]];
+  rows.forEach(([k, v]) => { doc.setFont('helvetica', 'bold'); Tx(k + ':', M, y); doc.setFont('helvetica', 'normal'); Tx(v, M + 40, y); y += 6.5; });
   const gs = globalScore();
-  doc.setDrawColor(255, 181, 71); doc.setLineWidth(.8); doc.roundedRect(PW - M - 58, 36, 58, 30, 3, 3);
-  doc.setFont('helvetica', 'bold'); doc.setFontSize(26); doc.setTextColor(18, 20, 42); T(`${gs}/100`, PW - M - 29, 51, { align: 'center' });
-  doc.setFontSize(10); doc.setFont('helvetica', 'normal'); T('Nota (primer intent) · ' + level(gs), PW - M - 29, 60, { align: 'center' });
+  doc.setDrawColor(255, 181, 71); doc.setLineWidth(.8); doc.roundedRect(PW - M - 60, 36, 60, 30, 3, 3);
+  doc.setFont('helvetica', 'bold'); doc.setFontSize(26); doc.setTextColor(18, 20, 42); Tx(`${gs}/100`, PW - M - 30, 51, { align: 'center' });
+  doc.setFontSize(9.5); doc.setFont('helvetica', 'normal'); Tx(T('pdfScore', { l: level(gs) }), PW - M - 30, 60, { align: 'center' });
   y = Math.max(y, 72) + 4;
-  doc.setFont('helvetica', 'bold'); doc.setFontSize(13); T('Resultats per planta', M, y); y += 6;
-  const cols = [['Planta', 52], ['Apartat', 22], ['CA', 20], ['1r intent', 20], ['Millor', 16], ['Estrelles', 18], ['Nivell', 26]];
+  doc.setFont('helvetica', 'bold'); doc.setFontSize(13); Tx(T('pdfByFloor'), M, y); y += 6;
+  const widths = [52, 22, 20, 20, 16, 18, 26]; const heads = T('pdfCols');
   doc.setFontSize(9); doc.setFillColor(237, 235, 248); doc.rect(M, y - 4, CW, 7, 'F');
-  let x = M + 2; cols.forEach(([h, w]) => { T(h, x, y); x += w; }); y += 7; doc.setFont('helvetica', 'normal');
+  let x = M + 2; heads.forEach((h, i) => { Tx(h, x, y); x += widths[i]; }); y += 7; doc.setFont('helvetica', 'normal');
   FLOORS.forEach(f => {
     const st = S.floors[f.id]; x = M + 2;
-    const vals = [(f.mode === 'boss' ? 'T · ' : f.num + ' · ') + f.title, f.apt.replace('Apartats', 'Apts.').replace('Apartat', 'Apt.'), f.ca, st.first == null ? '-' : st.first + '%', st.best == null ? '-' : st.best + '%', st.stars + ' de 3', level(st.first)];
-    vals.forEach((v, i) => { T(String(v), x, y); x += cols[i][1]; });
-    doc.setDrawColor(220, 220, 230); doc.setLineWidth(.2); doc.line(M, y + 2.2, M + CW, y + 2.2); y += 6.5;
+    const apt = f.apt.replace('Apartats', 'Apts.').replace('Apartados', 'Apdos.').replace('Apartat', 'Apt.').replace('Apartado', 'Apdo.');
+    const vals = [(f.mode === 'boss' ? 'T · ' : f.num + ' · ') + f.title, apt, f.ca, st.first == null ? '-' : st.first + '%', st.best == null ? '-' : st.best + '%', T('pdfStarsOf', { n: st.stars }), level(st.first)];
+    const cells = vals.map((v, i) => doc.splitTextToSize(pdfText(String(v)), widths[i] - 2));
+    const nl = Math.max(...cells.map(c => c.length));
+    cells.forEach((c, i) => { doc.text(c, x, y); x += widths[i]; });
+    doc.setDrawColor(220, 220, 230); doc.setLineWidth(.2); doc.line(M, y + (nl - 1) * 3.9 + 2.2, M + CW, y + (nl - 1) * 3.9 + 2.2); y += (nl - 1) * 3.9 + 6.5;
   });
   y += 3; doc.setFontSize(8.5); doc.setTextColor(90, 90, 110);
-  doc.text(doc.splitTextToSize(pdfText('La nota de cada planta és el percentatge d\'encerts a la primera en el primer intent complet. Nivells: Excel·lent ≥ 90 · Assolit ≥ 70 · En procés ≥ 50 · Cal repassar < 50. Per superar una planta cal un 70%.'), CW), M, y); y += 10;
-  // Per repassar
-  doc.setTextColor(25, 25, 35); doc.setFont('helvetica', 'bold'); doc.setFontSize(13); need(12); T('Per repassar', M, y); y += 7;
+  doc.text(doc.splitTextToSize(pdfText(T('pdfNote')), CW), M, y); y += 10;
+  doc.setTextColor(25, 25, 35); doc.setFont('helvetica', 'bold'); doc.setFontSize(13); need(12); Tx(T('pdfReview'), M, y); y += 7;
   let any = false;
   FLOORS.forEach(f => {
     const errs = S.floors[f.id].errors || []; if (!errs.length) return; any = true;
-    need(10); doc.setFont('helvetica', 'bold'); doc.setFontSize(10.5); doc.setTextColor(120, 90, 200); T(`Planta ${f.mode === 'boss' ? 'terrat' : f.num} · ${f.title} (CA ${f.ca})`, M, y); y += 5.5;
+    need(10); doc.setFont('helvetica', 'bold'); doc.setFontSize(10.5); doc.setTextColor(120, 90, 200);
+    Tx(T('pdfFloorHead', { n: f.mode === 'boss' ? T('pdfRoof') : f.num, title: f.title, ca: f.ca }), M, y); y += 5.5;
     doc.setTextColor(25, 25, 35);
     errs.forEach(er => {
-      const L1 = doc.splitTextToSize(pdfText('• ' + er.q), CW - 4);
-      const L2 = doc.splitTextToSize(pdfText('Has respost: ' + er.given), CW - 8);
-      const L3 = doc.splitTextToSize(pdfText('Correcte: ' + er.correct), CW - 8);
-      const L4 = doc.splitTextToSize(pdfText('Per què: ' + er.e), CW - 8);
+      const d = describe(er);
+      const L1 = doc.splitTextToSize(pdfText('• ' + d.q), CW - 4);
+      const L2 = doc.splitTextToSize(pdfText(T('pdfGiven') + d.given), CW - 8);
+      const L3 = doc.splitTextToSize(pdfText(T('pdfCorrect') + d.correct), CW - 8);
+      const L4 = doc.splitTextToSize(pdfText(T('pdfWhy') + d.e), CW - 8);
       const h = (L1.length + L2.length + L3.length + L4.length) * 4.3 + 3; need(h);
       doc.setFont('helvetica', 'bold'); doc.setFontSize(9.5); doc.text(L1, M + 2, y); y += L1.length * 4.3;
       doc.setFont('helvetica', 'normal'); doc.setTextColor(170, 40, 60); doc.text(L2, M + 6, y); y += L2.length * 4.3;
@@ -1420,68 +2188,76 @@ function buildPDF() {
     });
     y += 2;
   });
-  if (!any) { doc.setFont('helvetica', 'normal'); doc.setFontSize(10); T('Cap errada als primers intents de les plantes jugades.', M, y); }
+  if (!any) { doc.setFont('helvetica', 'normal'); doc.setFontSize(10); Tx(T('pdfNoErrors'), M, y); }
   const code = verifCode(); const pages = doc.getNumberOfPages();
   for (let p = 1; p <= pages; p++) {
     doc.setPage(p); doc.setFontSize(8); doc.setTextColor(120, 120, 140); doc.setFont('helvetica', 'normal');
-    T(`Codi de verificació: ${code} · ${S.name} · ${S.group}`, M, PH - 8); T(`${p}/${pages}`, PW - M, PH - 8, { align: 'right' });
+    Tx(T('pdfCode', { code, name: S.name, group: S.group }) + ' · ' + T('pdfLang'), M, PH - 8); Tx(`${p}/${pages}`, PW - M, PH - 8, { align: 'right' });
   }
   return doc;
 }
 async function downloadPDF() {
   const msg = $('#pdf-msg');
-  if (!window.jspdf) { msg.textContent = 'No s\'ha pogut carregar el generador de PDF. Comprova la connexió a Internet i torna a carregar la pàgina.'; return; }
+  if (!window.jspdf) { msg.textContent = T('pdfNoLib'); return; }
   try {
     const doc = buildPDF(); const blob = doc.output('blob');
     const safe = (S.name || 'alumne').normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^A-Za-z0-9]+/g, '');
-    msg.textContent = 'Preparant el PDF…';
-    const r = await saveFile(blob, `1665_TorreFum_${safe}_${S.group}.pdf`);
-    msg.textContent = r === 'declined' ? 'Has cancel·lat la descàrrega.' : 'Informe preparat. Lliura\'l on t\'indiqui el professor.';
-  } catch (e) { msg.textContent = 'No s\'ha pogut generar el PDF: ' + (e.message || e); }
+    msg.textContent = T('pdfPreparing');
+    const r = await saveFile(blob, T('pdfFile', { name: safe, group: S.group }));
+    msg.textContent = r === 'declined' ? T('pdfDeclined') : T('pdfDone');
+  } catch (e) { msg.textContent = T('pdfError', { m: e.message || e }); }
 }
 
 /* ═══════════════ Inici ═══════════════ */
 function helpOverlay() {
   overlay({
-    title: 'Com es juga', cls: 'amber',
-    html: `<p>Puja les vuit plantes de la torre. Cada planta treballa un apartat del RA2 amb un joc diferent i té tres onades, cada cop més ràpides.</p>
-    <table class="tbl"><thead><tr><th>Planta</th><th>Joc</th><th>CA</th></tr></thead><tbody>
-    ${FLOORS.map(f => `<tr><td>${f.mode === 'boss' ? 'Terrat' : f.num}</td><td>${esc(f.title)}</td><td>${esc(f.ca)}</td></tr>`).join('')}</tbody></table>
-    <ul class="recap"><li>Compta l'encert a la primera del primer intent de cada planta: és la nota de l'informe.</li>
-    <li>Necessites un ${PASS}% per obrir la planta següent. Pots repetir plantes per guanyar estrelles.</li>
-    <li>Tens 3 vides per onada. Cada errada t'explica la resposta correcta i aquella pregunta torna a sortir.</li>
-    <li>Quan acabis, descarrega l'informe PDF des de la torre.</li></ul>`,
-    buttons: [{ label: 'Entesos', primary: true }]
+    title: T('help'), cls: 'amber',
+    html: `<p>${T('helpText')}</p>
+    <table class="tbl"><thead><tr><th>${T('thFloor')}</th><th>${T('thGame')}</th><th>${T('thCa')}</th></tr></thead><tbody>
+    ${FLOORS.map(f => `<tr><td>${f.mode === 'boss' ? T('roof') : f.num}</td><td>${esc(f.title)}</td><td>${esc(f.ca)}</td></tr>`).join('')}</tbody></table>
+    <ul class="recap"><li>${T('help1')}</li><li>${T('help2', { p: PASS })}</li><li>${T('help3')}</li><li>${T('help4')}</li></ul>`,
+    buttons: [{ label: T('gotIt'), primary: true }]
   });
 }
+let savedGame = null;
+function refreshContinue() {
+  const b = $('#b-continue');
+  if (savedGame) { b.style.display = ''; b.textContent = T('continueSaved', { name: savedGame.name, group: savedGame.group }); }
+  else b.style.display = 'none';
+}
+function resume(saved) { S = saved; if (S.lang && S.lang !== LANG) setLang(S.lang, { silent: true }); renderMap(); show('map'); }
 function init() {
   $('#fum-big').outerHTML = fumSVG(96);
   drawSky(); window.addEventListener('resize', drawSky);
-  const saved = load();
-  if (saved) { const b = $('#b-continue'); b.style.display = ''; b.textContent = `Continua la partida de ${saved.name} (${saved.group})`; b.onclick = () => { S = saved; renderMap(); show('map'); }; }
+  savedGame = load();
+  setLang(savedGame && savedGame.lang ? savedGame.lang : initialLang(), { silent: true });
+  refreshContinue();
+  $('#b-continue').onclick = () => resume(savedGame);
+  document.querySelectorAll('.lang-pick button').forEach(b => b.addEventListener('click', () => setLang(b.dataset.lang)));
   $('#f-start').addEventListener('submit', e => {
     e.preventDefault();
     const name = $('#in-name').value.trim(), group = $('#in-group').value;
-    if (name.length < 3) { $('#start-err').textContent = 'Escriu el teu nom i cognoms.'; $('#in-name').focus(); return; }
-    if (!group) { $('#start-err').textContent = 'Tria el teu grup.'; $('#in-group').focus(); return; }
-    if (saved && !confirmReplace(saved, name, group)) return;
+    if (name.length < 3) { $('#start-err').textContent = T('errName'); $('#in-name').focus(); return; }
+    if (!group) { $('#start-err').textContent = T('errGroup'); $('#in-group').focus(); return; }
+    if (savedGame && !confirmReplace(savedGame)) return;
     S = blankState(name, group); save(); renderMap(); show('map'); helpOverlay();
   });
   $('#b-help').onclick = helpOverlay;
   $('#b-sound').onclick = () => { S.sound = !S.sound; save(); renderMap(); };
+  $('#b-lang').onclick = () => setLang(LANG === 'ca' ? 'es' : 'ca');
   $('#b-pdf').onclick = downloadPDF;
-  $('#b-reset').onclick = () => overlay({ title: 'Començar de nou?', cls: 'bad', html: '<p>S\'esborraran tots els resultats d\'aquest navegador.</p>', buttons: [{ label: 'Cancel·la' }, { label: 'Esborra i comença', primary: true, action: () => { try { localStorage.removeItem(KEY); } catch (e) { } location.reload(); } }] });
+  $('#b-reset').onclick = () => overlay({ title: T('resetTitle'), cls: 'bad', html: `<p>${T('resetText')}</p>`, buttons: [{ label: T('cancel') }, { label: T('resetGo'), primary: true, action: () => { try { localStorage.removeItem(KEY); } catch (e) { } location.reload(); } }] });
   $('#b-intro-back').onclick = () => { renderMap(); show('map'); };
   $('#b-pause').onclick = pauseGame;
   requestAnimationFrame(loop);
 }
 let replaceOK = false;
-function confirmReplace(saved, name, group) {
+function confirmReplace(saved) {
   if (replaceOK) return true;
   overlay({
-    title: 'Ja hi ha una partida desada', cls: 'amber',
-    html: `<p>En aquest navegador hi ha la partida de <strong>${esc(saved.name)} (${esc(saved.group)})</strong>. Si en comences una de nova, s'esborrarà.</p>`,
-    buttons: [{ label: 'Continua la desada', action: () => { S = saved; renderMap(); show('map'); } }, { label: 'Comença una partida nova', primary: true, action: () => { replaceOK = true; $('#f-start').requestSubmit(); } }]
+    title: T('savedTitle'), cls: 'amber',
+    html: `<p>${T('savedText', { name: esc(saved.name), group: esc(saved.group) })}</p>`,
+    buttons: [{ label: T('savedKeep'), action: () => resume(saved) }, { label: T('savedNew'), primary: true, action: () => { replaceOK = true; $('#f-start').requestSubmit(); } }]
   });
   return false;
 }

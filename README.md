@@ -1,5 +1,7 @@
 # La Torre d'en Fum · Arcade del RA2 (MP 1665)
 
+**Bilingüe: català i castellano.** L'alumne tria l'idioma a la portada i el pot canviar des de la torre o des de la pausa. L'informe PDF surt en l'idioma de la partida.
+
 Videojoc arcade en un sol fitxer HTML per treballar els apartats 3 a 8 de la teoria del RA2 (tecnologies habilitadores digitals) i els errors típics de l'apartat 10. Complementa el RPG «Els Segells de Vilabit» i el simulador «Empresa 4.0».
 
 ## Com es fa servir
