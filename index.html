@@ -201,6 +201,48 @@ kbd { font-family: var(--body); font-size: 13px; font-weight: 700; background: v
 .lang-pick button { border: 0; border-radius: 0; padding: 7px 14px; font-size: 14px; background: var(--panel); color: var(--muted); }
 .lang-pick button[aria-pressed="true"] { background: var(--amber); color: #1a1430; }
 
+/* Lliçó de teoria abans de cada planta */
+[hidden] { display: none !important; }
+.ls-dots { display: flex; gap: 6px; }
+.ls-dots span { flex: 1; height: 5px; border-radius: 99px; background: var(--line); }
+.ls-dots span.done { background: var(--fum); }
+.ls-dots span.on { background: var(--amber); }
+.lesson { display: flex; flex-direction: column; gap: 14px; min-height: 260px; }
+.lesson h2 { color: var(--ink); }
+.lesson .lead { font-size: 17px; max-width: 70ch; }
+.lcards { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 10px; }
+.lcards.compact { grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); }
+.lcard { background: var(--sky); border: 1px solid var(--line); border-left: 4px solid var(--amber); border-radius: 8px; padding: 10px 12px; display: flex; flex-direction: column; gap: 4px; }
+.lcard .ct { font-weight: 700; color: var(--amber); }
+.lcard .cd { font-size: 15px; }
+.lcard .cx { font-size: 14px; color: var(--muted); margin-top: 2px; }
+.lcard .cx b { color: var(--ink); }
+.tip { border: 1px dashed var(--fum); background: rgba(155, 138, 214, .12); border-radius: 8px; padding: 10px 12px; font-size: 15px; }
+.tip b { color: var(--fum); }
+.worked { display: grid; gap: 10px; }
+.wk { background: var(--sky); border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; display: grid; gap: 3px; }
+.wk .wq { font-weight: 700; }
+.wk .wa b { color: var(--ok); }
+.wk .ww { font-size: 14px; color: var(--muted); }
+.chk { display: grid; gap: 8px; padding-bottom: 12px; border-bottom: 1px solid var(--line); }
+.chk:last-child { border-bottom: 0; padding-bottom: 0; }
+.chk .cq { font-weight: 700; }
+.chk .opts { display: flex; flex-wrap: wrap; gap: 8px; }
+.chk .opt { font-size: 15px; padding: 8px 12px; }
+.chk .opt.ok { background: rgba(79, 214, 154, .18); border-color: var(--ok); color: var(--ink); opacity: 1; }
+.chk .opt.ko { background: rgba(255, 98, 115, .18); border-color: var(--bad); color: var(--ink); opacity: 1; }
+.chk .fb { font-size: 14px; }
+.chk .fb.ok b { color: var(--ok); }
+.chk .fb.ko b { color: var(--bad); }
+.lesson .sub { display: grid; gap: 8px; }
+.ls-nav .note { text-align: right; }
+@media (max-width: 520px) {
+  .lcards, .lcards.compact { grid-template-columns: 1fr; }
+  .ls-nav { gap: 8px; }
+  .ls-nav button { flex: 1 1 auto; }
+  .ls-nav .spacer { display: none; }
+}
+
 </style>
 </head>
 <body>
@@ -261,14 +303,17 @@ kbd { font-family: var(--body); font-size: 13px; font-weight: 700; background: v
 
   <!-- INTRO DE PLANTA -->
   <section class="screen" id="scr-intro" aria-labelledby="t-intro">
-    <div class="row"><span class="chip amber" id="intro-chip"></span><span class="chip" id="intro-ca"></span></div>
+    <div class="row"><span class="chip amber" id="intro-chip"></span><span class="chip" id="intro-ca"></span><span class="spacer"></span><span class="chip" id="ls-step"></span></div>
     <h1 id="t-intro"></h1>
-    <p class="lead" id="intro-tag"></p>
-    <div class="panel"><h3 data-i18n="recall">Recorda</h3><ul class="recap" id="intro-recap"></ul></div>
-    <div class="panel"><h3 data-i18n="controls">Controls</h3><div class="keys" id="intro-keys"></div></div>
-    <div class="row">
+    <div class="ls-dots" id="ls-dots" aria-hidden="true"></div>
+    <div class="panel lesson" id="ls-body" aria-live="polite"></div>
+    <div class="row ls-nav">
       <button type="button" id="b-intro-back" data-i18n="back">Torna a la torre</button>
       <span class="spacer"></span>
+      <span class="note" id="ls-note"></span>
+      <button type="button" id="b-ls-skip" data-i18n="lsSkip">Ja la tinc vista: ves al joc</button>
+      <button type="button" id="b-ls-prev" data-i18n="lsPrev">Anterior</button>
+      <button type="button" class="primary" id="b-ls-next" data-i18n="lsNext">Següent</button>
       <button type="button" class="primary" id="b-intro-go" data-i18n="go">Som-hi</button>
     </div>
   </section>
@@ -312,9 +357,8 @@ const CONTENT = {
       ],
       bins: ['Negoci (IT)', 'Tots dos', 'Planta (OT)'],
       waves: [
-        { count: 18, speed: 1, pool: 'a' },
-        { count: 20, speed: 1.3, pool: 'b' },
-        { count: 22, speed: 1.6, pool: 'all' }
+        { count: 10, speed: 1, pool: 'a' },
+        { count: 12, speed: 1.3, pool: 'b' }
       ],
       items: [
         { p: 'a', t: 'Blockchain', a: 0, e: 'Blockchain pesa al negoci: dona confiança entre les empreses d\'una cadena. Gairebé no toca la planta.' },
@@ -372,9 +416,9 @@ const CONTENT = {
         CLOUDIOT: 'Cloud + IoT', D3: 'Impressió 3D', RARV: 'RA / RV'
       },
       waves: [
-        { label: 'Entorn IT · negoci', count: 12, speed: 1, ammo: ['CLOUD', 'BIG', 'IARPA', 'CIBER', 'BLOCK', 'IA'], pool: 'it' },
-        { label: 'Entorn OT · planta', count: 13, speed: 1.2, ammo: ['IOT', 'IOTIA', 'IA', 'ROBOT', 'BESSO', 'G5'], pool: 'ot' },
-        { label: 'Frontera i barreja', count: 14, speed: 1.4, ammo: ['IOT', 'CLOUDIOT', 'IA', 'BESSO', 'CIBER', 'D3', 'RARV'], pool: 'fr' }
+        { label: 'Entorn IT · negoci', count: 6, speed: 1, ammo: ['CLOUD', 'BIG', 'IARPA', 'CIBER', 'BLOCK', 'IA'], pool: 'it' },
+        { label: 'Entorn OT · planta', count: 6, speed: 1.2, ammo: ['IOT', 'IOTIA', 'IA', 'ROBOT', 'BESSO', 'G5'], pool: 'ot' },
+        { label: 'Frontera i barreja', count: 7, speed: 1.4, ammo: ['IOT', 'CLOUDIOT', 'IA', 'BESSO', 'CIBER', 'D3', 'RARV'], pool: 'fr' }
       ],
       items: [
         { p: 'it', t: 'Servidors propis a l\'oficina', d: 'Serveis al núvol que creixen quan cal', a: 'CLOUD', e: 'Del servidor propi als serveis que creixen o es redueixen al moment: és el núvol.' },
@@ -429,9 +473,8 @@ const CONTENT = {
       ],
       bins: ['Servitització', 'Personalització massiva', 'Autoservei digital', 'Servei predictiu', 'Producte connectat'],
       waves: [
-        { count: 18, speed: 0.85, pool: 'all' },
-        { count: 20, speed: 1.1, pool: 'all' },
-        { count: 22, speed: 1.35, pool: 'all' }
+        { count: 10, speed: 0.85, pool: 'all' },
+        { count: 12, speed: 1.1, pool: 'all' }
       ],
       items: [
         { t: 'Hores de fred garantides en lloc d\'una cambra frigorífica', a: 0, e: 'Pagues per l\'ús (hores de fred), no per la cambra: servitització.' },
@@ -472,9 +515,8 @@ const CONTENT = {
       ],
       bins: ['Servei nou', 'Mercat nou'],
       waves: [
-        { count: 16, speed: 0.95, pool: 'all' },
-        { count: 18, speed: 1.25, pool: 'all' },
-        { count: 20, speed: 1.55, pool: 'all' }
+        { count: 9, speed: 0.95, pool: 'all' },
+        { count: 10, speed: 1.25, pool: 'all' }
       ],
       items: [
         { t: 'Plataformes d\'allotjament entre particulars', a: 1, e: 'Abans no podia existir: mòbil + geolocalització + núvol. És un mercat nou.' },
@@ -513,9 +555,9 @@ const CONTENT = {
         'Sense dades no es pot informar de res: la sostenibilitat es demostra amb un indicador.'
       ],
       waves: [
-        { label: 'Què estalvia i què costa', bins: ['Estalvia (+)', 'Costa (−)'], count: 16, speed: 1, pool: 'bal' },
-        { label: 'Indicador o fum?', bins: ['Té indicador', 'És fum'], count: 16, speed: 1.15, pool: 'ind' },
-        { label: 'Àmbits on ajuden les THD', bins: ['Energia', 'Transport', 'Materials', 'Cadena de fred', 'Paper i viatges', 'Economia circular'], count: 20, speed: 1.05, pool: 'amb' }
+        { label: 'Què estalvia i què costa', bins: ['Estalvia (+)', 'Costa (−)'], count: 7, speed: 1, pool: 'bal' },
+        { label: 'Indicador o fum?', bins: ['Té indicador', 'És fum'], count: 7, speed: 1.15, pool: 'ind' },
+        { label: 'Àmbits on ajuden les THD', bins: ['Energia', 'Transport', 'Materials', 'Cadena de fred', 'Paper i viatges', 'Economia circular'], count: 9, speed: 1.05, pool: 'amb' }
       ],
       items: [
         { p: 'bal', t: 'Llums i clima que s\'apaguen sols a les habitacions buides', a: 0, e: 'Menys energia: va a la columna de l\'estalvi.' },
@@ -580,8 +622,7 @@ const CONTENT = {
       blocks: ['Portada', 'Objectiu', 'Context de l\'empresa', 'Fitxa de cada tecnologia', 'Taula de síntesi', 'Prioritats justificades', 'Impacte a IT i OT', 'Sostenibilitat', 'Conclusions', 'Fonts'],
       waves: [
         { label: 'Munta l\'informe en ordre', kind: 'order', count: 10, speed: 1, tiles: 3 },
-        { label: 'On va aquest contingut?', kind: 'match', count: 14, speed: 1.15, tiles: 3 },
-        { label: 'On va aquest contingut? (ràpid)', kind: 'match', count: 16, speed: 1.35, tiles: 4 }
+        { label: 'On va aquest contingut?', kind: 'match', count: 10, speed: 1.15, tiles: 3 }
       ],
       items: [
         { t: 'Títol, empresa analitzada, cicle, nom i data', a: 0, e: 'Aquestes dades van a la portada (bloc 1).' },
@@ -618,9 +659,8 @@ const CONTENT = {
         'No dir si cada tecnologia pesa al negoci o a la planta.'
       ],
       waves: [
-        { count: 16, speed: 1, max: 1 },
-        { count: 18, speed: 1.2, max: 2 },
-        { count: 20, speed: 1.4, max: 2 }
+        { count: 10, speed: 1, max: 1 },
+        { count: 12, speed: 1.2, max: 2 }
       ],
       items: [
         { t: 'Posem blockchain perquè queda modern.', a: 1, e: 'Trampa: proposar blockchain sense justificar quin problema resol és un error típic.' },
@@ -671,13 +711,12 @@ const CONTENT = {
         'Barreja de tot: patrons, mercats nous, sostenibilitat, negoci o planta, abans → després i l\'informe.',
         'Envia cada frase a «És cert» o a «És fum».',
         'Cada encert treu fum a en Fum. Cada error et treu una vida.',
-        'Tres fases, cada cop més ràpides.'
+        'Dues fases, la segona més ràpida.'
       ],
       bins: ['És cert', 'És fum'],
       waves: [
-        { label: 'Fase 1', count: 13, speed: 1, hp: 13 },
-        { label: 'Fase 2', count: 15, speed: 1.3, hp: 15 },
-        { label: 'Fase 3', count: 17, speed: 1.6, hp: 17 }
+        { label: 'Fase 1', count: 10, speed: 1, hp: 10 },
+        { label: 'Fase 2', count: 12, speed: 1.35, hp: 12 }
       ],
       items: [
         { t: 'Servitització: vendre hores de fred en lloc de la cambra.', a: 0, e: 'Cert: es ven l\'ús, no la cosa.' },
@@ -738,9 +777,8 @@ const CONTENT_ES = {
       ],
       bins: ['Negocio (IT)', 'Los dos', 'Planta (OT)'],
       waves: [
-        { count: 18, speed: 1, pool: 'a' },
-        { count: 20, speed: 1.3, pool: 'b' },
-        { count: 22, speed: 1.6, pool: 'all' }
+        { count: 10, speed: 1, pool: 'a' },
+        { count: 12, speed: 1.3, pool: 'b' }
       ],
       items: [
         { p: 'a', t: 'Blockchain', a: 0, e: 'El blockchain pesa en el negocio: da confianza entre las empresas de una cadena. Casi no toca la planta.' },
@@ -797,9 +835,9 @@ const CONTENT_ES = {
         CLOUDIOT: 'Cloud + IoT', D3: 'Impresión 3D', RARV: 'RA / RV'
       },
       waves: [
-        { label: 'Entorno IT · negocio', count: 12, speed: 1, ammo: ['CLOUD', 'BIG', 'IARPA', 'CIBER', 'BLOCK', 'IA'], pool: 'it' },
-        { label: 'Entorno OT · planta', count: 13, speed: 1.2, ammo: ['IOT', 'IOTIA', 'IA', 'ROBOT', 'BESSO', 'G5'], pool: 'ot' },
-        { label: 'Frontera y mezcla', count: 14, speed: 1.4, ammo: ['IOT', 'CLOUDIOT', 'IA', 'BESSO', 'CIBER', 'D3', 'RARV'], pool: 'fr' }
+        { label: 'Entorno IT · negocio', count: 6, speed: 1, ammo: ['CLOUD', 'BIG', 'IARPA', 'CIBER', 'BLOCK', 'IA'], pool: 'it' },
+        { label: 'Entorno OT · planta', count: 6, speed: 1.2, ammo: ['IOT', 'IOTIA', 'IA', 'ROBOT', 'BESSO', 'G5'], pool: 'ot' },
+        { label: 'Frontera y mezcla', count: 7, speed: 1.4, ammo: ['IOT', 'CLOUDIOT', 'IA', 'BESSO', 'CIBER', 'D3', 'RARV'], pool: 'fr' }
       ],
       items: [
         { p: 'it', t: 'Servidores propios en la oficina', d: 'Servicios en la nube que crecen cuando hace falta', a: 'CLOUD', e: 'Del servidor propio a servicios que crecen o se reducen al momento: es la nube.' },
@@ -853,9 +891,8 @@ const CONTENT_ES = {
       ],
       bins: ['Servitización', 'Personalización masiva', 'Autoservicio digital', 'Servicio predictivo', 'Producto conectado'],
       waves: [
-        { count: 18, speed: 0.85, pool: 'all' },
-        { count: 20, speed: 1.1, pool: 'all' },
-        { count: 22, speed: 1.35, pool: 'all' }
+        { count: 10, speed: 0.85, pool: 'all' },
+        { count: 12, speed: 1.1, pool: 'all' }
       ],
       items: [
         { t: 'Horas de frío garantizadas en lugar de una cámara frigorífica', a: 0, e: 'Pagas por el uso (horas de frío), no por la cámara: servitización.' },
@@ -895,9 +932,8 @@ const CONTENT_ES = {
       ],
       bins: ['Servicio nuevo', 'Mercado nuevo'],
       waves: [
-        { count: 16, speed: 0.95, pool: 'all' },
-        { count: 18, speed: 1.25, pool: 'all' },
-        { count: 20, speed: 1.55, pool: 'all' }
+        { count: 9, speed: 0.95, pool: 'all' },
+        { count: 10, speed: 1.25, pool: 'all' }
       ],
       items: [
         { t: 'Plataformas de alojamiento entre particulares', a: 1, e: 'Antes no podía existir: móvil + geolocalización + nube. Es un mercado nuevo.' },
@@ -935,9 +971,9 @@ const CONTENT_ES = {
         'Sin datos no se puede informar de nada: la sostenibilidad se demuestra con un indicador.'
       ],
       waves: [
-        { label: 'Qué ahorra y qué cuesta', bins: ['Ahorra (+)', 'Cuesta (−)'], count: 16, speed: 1, pool: 'bal' },
-        { label: '¿Indicador o humo?', bins: ['Tiene indicador', 'Es humo'], count: 16, speed: 1.15, pool: 'ind' },
-        { label: 'Ámbitos donde ayudan las THD', bins: ['Energía', 'Transporte', 'Materiales', 'Cadena de frío', 'Papel y viajes', 'Economía circular'], count: 20, speed: 1.05, pool: 'amb' }
+        { label: 'Qué ahorra y qué cuesta', bins: ['Ahorra (+)', 'Cuesta (−)'], count: 7, speed: 1, pool: 'bal' },
+        { label: '¿Indicador o humo?', bins: ['Tiene indicador', 'Es humo'], count: 7, speed: 1.15, pool: 'ind' },
+        { label: 'Ámbitos donde ayudan las THD', bins: ['Energía', 'Transporte', 'Materiales', 'Cadena de frío', 'Papel y viajes', 'Economía circular'], count: 9, speed: 1.05, pool: 'amb' }
       ],
       items: [
         { p: 'bal', t: 'Luces y clima que se apagan solos en las habitaciones vacías', a: 0, e: 'Menos energía: va a la columna del ahorro.' },
@@ -1001,8 +1037,7 @@ const CONTENT_ES = {
       blocks: ['Portada', 'Objetivo', 'Contexto de la empresa', 'Ficha de cada tecnología', 'Tabla de síntesis', 'Prioridades justificadas', 'Impacto en IT y OT', 'Sostenibilidad', 'Conclusiones', 'Fuentes'],
       waves: [
         { label: 'Monta el informe en orden', kind: 'order', count: 10, speed: 1, tiles: 3 },
-        { label: '¿Dónde va este contenido?', kind: 'match', count: 14, speed: 1.15, tiles: 3 },
-        { label: '¿Dónde va este contenido? (rápido)', kind: 'match', count: 16, speed: 1.35, tiles: 4 }
+        { label: '¿Dónde va este contenido?', kind: 'match', count: 10, speed: 1.15, tiles: 3 }
       ],
       items: [
         { t: 'Título, empresa analizada, ciclo, nombre y fecha', a: 0, e: 'Estos datos van en la portada (bloque 1).' },
@@ -1038,9 +1073,8 @@ const CONTENT_ES = {
         'No decir si cada tecnología pesa en el negocio o en la planta.'
       ],
       waves: [
-        { count: 16, speed: 1, max: 1 },
-        { count: 18, speed: 1.2, max: 2 },
-        { count: 20, speed: 1.4, max: 2 }
+        { count: 10, speed: 1, max: 1 },
+        { count: 12, speed: 1.2, max: 2 }
       ],
       items: [
         { t: 'Ponemos blockchain porque queda moderno.', a: 1, e: 'Trampa: proponer blockchain sin justificar qué problema resuelve es un error típico.' },
@@ -1090,13 +1124,12 @@ const CONTENT_ES = {
         'Mezcla de todo: patrones, mercados nuevos, sostenibilidad, negocio o planta, antes → después y el informe.',
         'Envía cada frase a «Es cierto» o a «Es humo».',
         'Cada acierto le quita humo a Fum. Cada error te quita una vida.',
-        'Tres fases, cada vez más rápidas.'
+        'Dos fases, la segunda más rápida.'
       ],
       bins: ['Es cierto', 'Es humo'],
       waves: [
-        { label: 'Fase 1', count: 13, speed: 1, hp: 13 },
-        { label: 'Fase 2', count: 15, speed: 1.3, hp: 15 },
-        { label: 'Fase 3', count: 17, speed: 1.6, hp: 17 }
+        { label: 'Fase 1', count: 10, speed: 1, hp: 10 },
+        { label: 'Fase 2', count: 12, speed: 1.35, hp: 12 }
       ],
       items: [
         { t: 'Servitización: vender horas de frío en lugar de la cámara.', a: 0, e: 'Cierto: se vende el uso, no la cosa.' },
@@ -1241,7 +1274,21 @@ const STR = {
     pauseLang: 'Canvia a castellano',
     pauseLangNote: "Si canvies d'idioma, tornes a començar aquesta onada en castellano. El que ja has respost a la primera no canvia la nota.",
     exitTower: 'Surt a la torre',
-    helpText: "Puja les vuit plantes de la torre. Cada planta treballa un apartat del RA2 amb un joc diferent i té tres onades, cada cop més ràpides.",
+    lsStep: 'Pas {n} de {m}',
+    lsPrev: 'Anterior',
+    lsNext: 'Següent',
+    lsSkip: 'Ja la tinc vista: ves al joc',
+    lsEx: 'Exemple:',
+    lsTip: 'Truc:',
+    lsWorkedH: 'Exemples resolts',
+    lsWorkedP: "Fixa't com es raona cada cas abans de jugar.",
+    lsCheckH: 'Comprova-ho',
+    lsCheckP: 'Unes preguntes ràpides per veure si ho has entès. No compten per a la nota.',
+    lsRight: 'Correcte.',
+    lsWrong: 'No és ben bé així.',
+    lsAnswerAll: 'Respon les preguntes per continuar.',
+    lsReadyH: 'A punt per jugar',
+    helpText: "Puja les vuit plantes de la torre. Cada planta treballa un apartat del RA2: primer una lliçó breu amb la teoria, exemples resolts i unes preguntes de prova que no compten, i després un joc de dues o tres onades curtes.",
     thFloor: 'Planta', thGame: 'Joc', thCa: 'CA',
     help1: "Compta l'encert a la primera del primer intent de cada planta: és la nota de l'informe.",
     help2: 'Necessites un {p}% per obrir la planta següent. Pots repetir plantes per guanyar estrelles.',
@@ -1376,7 +1423,21 @@ const STR = {
     pauseLang: 'Canvia a català',
     pauseLangNote: 'Si cambias de idioma, vuelves a empezar esta oleada en catalán. Lo que ya has respondido a la primera no cambia la nota.',
     exitTower: 'Sal a la torre',
-    helpText: 'Sube las ocho plantas de la torre. Cada planta trabaja un apartado del RA2 con un juego diferente y tiene tres oleadas, cada vez más rápidas.',
+    lsStep: 'Paso {n} de {m}',
+    lsPrev: 'Anterior',
+    lsNext: 'Siguiente',
+    lsSkip: 'Ya la he visto: ir al juego',
+    lsEx: 'Ejemplo:',
+    lsTip: 'Truco:',
+    lsWorkedH: 'Ejemplos resueltos',
+    lsWorkedP: 'Fíjate en cómo se razona cada caso antes de jugar.',
+    lsCheckH: 'Compruébalo',
+    lsCheckP: 'Unas preguntas rápidas para ver si lo has entendido. No cuentan para la nota.',
+    lsRight: 'Correcto.',
+    lsWrong: 'No es exactamente así.',
+    lsAnswerAll: 'Responde las preguntas para continuar.',
+    lsReadyH: 'Listo para jugar',
+    helpText: 'Sube las ocho plantas de la torre. Cada planta trabaja un apartado del RA2: primero una lección breve con la teoría, ejemplos resueltos y unas preguntas de prueba que no cuentan, y después un juego de dos o tres oleadas cortas.',
     thFloor: 'Planta', thGame: 'Juego', thCa: 'CE',
     help1: 'Cuenta el acierto a la primera del primer intento de cada planta: es la nota del informe.',
     help2: 'Necesitas un {p}% para abrir la planta siguiente. Puedes repetir plantas para ganar estrellas.',
@@ -1412,6 +1473,672 @@ const STR = {
     pdfCode: 'Código de verificación: {code} · {name} · {group}',
     pdfLang: 'Idioma de la partida: castellano',
     locale: 'es-ES', numLocale: 'es'
+  }
+};
+
+// Lliçons de teoria que es mostren abans de cada planta · «La Torre d'en Fum»
+// Cada lliçó: slides (teoria amb targetes), worked (exemples resolts), check (comprova-ho, no puntua)
+const LESSONS = {
+  ca: {
+    p1: {
+      slides: [
+        {
+          h: 'Les 11 tecnologies habilitadores digitals',
+          p: 'Una THD és una tecnologia que permet a una empresa fer coses noves o fer millor les que ja fa. N\'estudiem onze:',
+          compact: true,
+          cards: [
+            { t: 'IoT', d: 'Objectes i sensors connectats que envien dades soles.' },
+            { t: '5G', d: 'Connexió mòbil ràpida per a molts aparells alhora.' },
+            { t: 'Cloud', d: 'Programes i dades a internet. Pagues pel que fas servir.' },
+            { t: 'Big data', d: 'Analitzar tantes dades que no caben en un Excel.' },
+            { t: 'IA', d: 'Programes que aprenen de les dades per predir, reconèixer o redactar.' },
+            { t: 'Bessó digital', d: 'Còpia digital d\'una cosa real per provar-hi canvis.' },
+            { t: 'Robòtica', d: 'Robots i cobots que fan feines físiques.' },
+            { t: 'Impressió 3D', d: 'Fabricar peces capa a capa, quan calen.' },
+            { t: 'RA / RV', d: 'Afegir informació al que veus (RA) o entrar en un espai simulat (RV).' },
+            { t: 'Ciberseguretat', d: 'Protegir dades, accessos i màquines.' },
+            { t: 'Blockchain', d: 'Registre compartit entre empreses que ningú pot alterar.' }
+          ]
+        },
+        {
+          h: 'Dos entorns: negoci i planta',
+          p: 'Tota empresa té dues parts. Cada tecnologia pesa més en una que en l\'altra.',
+          cards: [
+            { t: 'Negoci (IT)', d: 'L\'oficina: on es gestiona informació. Vendes, comptabilitat, clients, preus.', ex: 'Un CRM per seguir els clients.' },
+            { t: 'Planta (OT)', d: 'On passen les coses físiques: magatzem, cuina de l\'hotel, camió, línia de producció. Es mou, es mesura o es vigila alguna cosa.', ex: 'Una sonda de temperatura dins del camió frigorífic.' },
+            { t: 'Tots dos', d: 'Tecnologies que pesen molt als dos costats alhora.', ex: 'La IA respon clients (negoci) i detecta peces defectuoses amb una càmera (planta).' }
+          ]
+        },
+        {
+          h: 'On pesa més cada THD?',
+          cards: [
+            { t: 'Sobretot negoci', d: 'Cloud, big data i blockchain.' },
+            { t: 'Tots dos', d: 'IA, ciberseguretat i bessó digital.' },
+            { t: 'Sobretot planta', d: 'IoT, 5G, robòtica, impressió 3D i RA / RV.' }
+          ],
+          tip: 'Pregunta\'t: aquesta aplicació tracta informació (negoci) o actua sobre una cosa física (planta)?'
+        }
+      ],
+      worked: [
+        { q: 'Una IA llegeix les factures en PDF i un RPA les entra a l\'ERP', a: 'Negoci (IT)', why: 'Tracta documents d\'oficina.' },
+        { q: 'Sensors de vibració en una màquina de la línia', a: 'Planta (OT)', why: 'Vigilen una màquina real.' },
+        { q: 'Doble factor al correu i xarxa de la planta separada per zones', a: 'Tots dos', why: 'És ciberseguretat a l\'oficina i a la planta alhora.' }
+      ],
+      check: [
+        { q: 'Un robot de magatzem porta la prestatgeria al treballador.', o: ['Negoci (IT)', 'Tots dos', 'Planta (OT)'], a: 2, e: 'Mou objectes físics: planta.' },
+        { q: 'Preveure les vendes de la campanya de Nadal.', o: ['Negoci (IT)', 'Tots dos', 'Planta (OT)'], a: 0, e: 'Preveure vendes és una tasca d\'oficina: negoci.' },
+        { q: 'Quina d\'aquestes THD pesa molt als dos costats?', o: ['Blockchain', 'Bessó digital', '5G'], a: 1, e: 'El bessó necessita dades de la planta i sistemes de negoci per decidir.' }
+      ]
+    },
+    p2: {
+      slides: [
+        {
+          h: 'Com s\'explica una millora',
+          p: 'Una millora digital sempre té tres peces: com es feia abans, com es fa després i quina tecnologia ho fa possible.',
+          cards: [
+            { t: 'Abans', d: 'Teclejar les factures a mà.' },
+            { t: 'Després', d: 'La IA les llegeix i un robot de programari (RPA) les entra al programa.' },
+            { t: 'Tecnologia', d: 'IA + RPA.' }
+          ],
+          tip: 'Si falta una de les tres peces, la millora està mal explicada.'
+        },
+        {
+          h: 'Millores a l\'entorn IT (negoci)',
+          cards: [
+            { t: 'Cloud', d: 'Servidors propis → serveis al núvol que creixen quan cal i es paguen per ús. Els programes es passen les dades sols (API).' },
+            { t: 'Big data', d: 'Un informe a final de mes → indicadors en temps real. Decidir analitzant milions de tiquets.' },
+            { t: 'IA + RPA', d: 'Feines repetitives d\'oficina → la IA llegeix i l\'RPA entra les dades.' },
+            { t: 'IA', d: 'Preus fixos tota la temporada → el preu es recalcula segons la demanda. Un xat respon les preguntes freqüents.' },
+            { t: 'Ciberseguretat', d: 'Contrasenyes apuntades en un full → gestor de contrasenyes i doble factor.' },
+            { t: 'Blockchain', d: 'Correus i papers per demostrar l\'origen d\'un lot → registre compartit que ningú pot alterar.' }
+          ]
+        },
+        {
+          h: 'Millores a l\'entorn OT (planta)',
+          cards: [
+            { t: 'IoT', d: 'Rondes a peu → sensors que vigilen sols i avisen al mòbil.' },
+            { t: 'IoT + IA', d: 'Reparar quan s\'espatlla → manteniment predictiu: reparar abans.' },
+            { t: 'IA', d: 'Revisar a ull → càmeres que detecten defectes o compten palets (visió artificial).' },
+            { t: 'Robòtica', d: 'Tasques pesades a mà → robots i cobots.' },
+            { t: 'Bessó digital', d: 'Provar els canvis a la planta real → simular-los primer.' },
+            { t: '5G', d: 'Zones sense bona connexió → connexió fiable a tot el recinte.' }
+          ]
+        },
+        {
+          h: 'A la frontera entre IT i OT',
+          cards: [
+            { t: 'Una sola versió de la veritat', d: 'L\'oficina i la planta comparteixen les mateixes dades (IoT + edge + bessó digital).' },
+            { t: 'El MES i l\'ERP es parlen', d: 'Les dades de la planta arriben al programa de gestió (cloud + IoT).' },
+            { t: 'Xarxes separades per zones', d: 'Connectar-ho tot obre portes als atacs: ciberseguretat.' },
+            { t: 'Impressió 3D i RA / RV', d: 'Recanvis impresos quan calen; formació i ajuda a distància amb ulleres.' }
+          ]
+        }
+      ],
+      worked: [
+        { q: 'Abans: reparar la màquina quan s\'espatlla', a: 'IoT + IA', why: 'Els sensors donen les dades i la IA prediu l\'avaria.' },
+        { q: 'Abans: decidir les ofertes per intuïció', a: 'Big data', why: 'Després es decideix analitzant milions de tiquets.' },
+        { q: 'Abans: moure prestatgeries per provar una nova distribució', a: 'Bessó digital', why: 'Es prova abans a la còpia digital del magatzem.' }
+      ],
+      check: [
+        { q: 'Abans: apuntar a mà la temperatura de les cambres. Quina THD ho canvia?', o: ['IoT', 'Blockchain', 'Impressió 3D'], a: 0, e: 'Una sonda connectada que envia la dada i avisa és IoT.' },
+        { q: 'Abans: comprar un servidor nou cada cop que creix la feina.', o: ['Robòtica', 'Cloud', '5G'], a: 1, e: 'Pagar per ús i créixer al moment és la idea del núvol.' },
+        { q: 'Una millora ben explicada diu...', o: ['Només el nom de la tecnologia', 'Abans, després i la tecnologia que ho fa possible', 'La llista de les 11 THD'], a: 1, e: 'Són les tres peces de qualsevol millora.' }
+      ]
+    },
+    p3: {
+      slides: [
+        {
+          h: 'Productes i serveis nous',
+          p: 'Les THD no només milloren el que ja es fa: permeten vendre coses noves. Gairebé tots els productes i serveis nous segueixen un d\'aquests cinc patrons.',
+          cards: [
+            { t: 'Servitització', d: 'Vendre l\'ús o el resultat, no la cosa.', ex: 'Hores de fred garantides en lloc d\'una cambra frigorífica.' },
+            { t: 'Personalització massiva', d: 'A mida de cada client, però a preu de sèrie.', ex: 'Sabatilles que el client dissenya al web.' },
+            { t: 'Autoservei digital', d: 'El client ho fa ell mateix, al mòbil o al web.', ex: 'Registre d\'entrada al mòbil i clau digital.' },
+            { t: 'Servei predictiu', d: 'Actuar abans que passi el problema.', ex: 'L\'ascensor demana el tècnic abans que falli una peça.' },
+            { t: 'Producte connectat', d: 'Continua donant dades després de vendre\'l.', ex: 'Un comptador d\'aigua que envia la lectura sol.' }
+          ]
+        },
+        {
+          h: 'Com distingir-los',
+          p: 'Fes-te aquestes preguntes, per ordre:',
+          cards: [
+            { t: 'Es paga l\'ús o el resultat?', d: '→ Servitització' },
+            { t: 'Cada client té la seva versió?', d: '→ Personalització massiva' },
+            { t: 'El client ho fa sol, sense ningú?', d: '→ Autoservei digital' },
+            { t: 'S\'actua abans de l\'avaria?', d: '→ Servei predictiu' },
+            { t: 'El producte envia dades un cop venut?', d: '→ Producte connectat' }
+          ],
+          tip: 'Predictiu i connectat sovint van junts. Si la frase parla d\'anticipar-se, és predictiu. Si parla de les dades que envia el producte, és connectat.'
+        }
+      ],
+      worked: [
+        { q: 'Llogar la impressora i pagar per pàgina impresa', a: 'Servitització', why: 'Es ven el resultat (pàgines), no l\'aparell.' },
+        { q: 'La flota planifica el canvi de pneumàtics abans que fallin', a: 'Servei predictiu', why: 'Es repara abans que passi.' },
+        { q: 'Una bicicleta de lloguer que diu on és i quanta bateria li queda', a: 'Producte connectat', why: 'El producte segueix enviant dades.' }
+      ],
+      check: [
+        { q: 'Il·luminació com a servei: pagues per la llum, no per les làmpades.', o: ['Servitització', 'Autoservei digital', 'Producte connectat'], a: 0, e: 'Es ven el resultat (llum): servitització.' },
+        { q: 'Una crema amb la fórmula ajustada a la teva pell.', o: ['Servei predictiu', 'Personalització massiva', 'Servitització'], a: 1, e: 'Producte a mida per a cada client: personalització massiva.' },
+        { q: 'Caixes d\'autocobrament a la botiga.', o: ['Producte connectat', 'Servei predictiu', 'Autoservei digital'], a: 2, e: 'El client es cobra ell mateix: autoservei digital.' }
+      ]
+    },
+    p4: {
+      slides: [
+        {
+          h: 'Servei nou o mercat nou?',
+          p: 'Són dues coses diferents. La clau és mirar si l\'empresa ja existia.',
+          cards: [
+            { t: 'Producte o servei nou', d: 'Una empresa que ja existia ven una cosa diferent.', ex: 'L\'hotel de sempre ofereix registre al mòbil i clau digital.' },
+            { t: 'Mercat nou', d: 'Apareix un negoci sencer que abans no podia existir perquè la tecnologia no ho permetia.', ex: 'Plataformes d\'allotjament entre particulars (mòbil + geolocalització + núvol).' }
+          ],
+          tip: 'Pregunta clau: l\'empresa ja existia i ara ven una altra cosa (servei nou), o el negoci sencer és nou (mercat nou)?'
+        },
+        {
+          h: 'Vuit mercats nous',
+          compact: true,
+          cards: [
+            { t: 'Plataformes entre particulars', d: 'Allotjament, repartiment per aplicació.' },
+            { t: 'Subscripció i pagament per ús', d: 'Programari per mesos, cotxe per minuts.' },
+            { t: 'Economia de la dada', d: 'Empreses que venen indicadors i dades de mercat.' },
+            { t: 'Salut digital', d: 'Consulta mèdica a distància, control de malalts des de casa.' },
+            { t: 'Ciberseguretat gestionada', d: 'Vigilar 24 hores la xarxa d\'altres empreses.' },
+            { t: 'Formació immersiva', d: 'Simuladors de RV per formar sense riscos.' },
+            { t: 'Comerç social', d: 'Vendre directament des de les xarxes amb creadors.' },
+            { t: 'Traçabilitat verificable', d: 'Certificar l\'origen o la petjada de carboni amb blockchain.' }
+          ]
+        }
+      ],
+      worked: [
+        { q: 'La botiga del barri obre la seva botiga en línia', a: 'Servei nou', why: 'La botiga ja existia: és un canal nou, no un mercat nou.' },
+        { q: 'Empreses que vigilen 24 hores la xarxa d\'altres empreses', a: 'Mercat nou', why: 'Ciberseguretat gestionada: abans no existia.' },
+        { q: 'El fabricant d\'ascensors avisa abans de l\'avaria', a: 'Servei nou', why: 'El fabricant ja existia i afegeix un servei predictiu.' }
+      ],
+      check: [
+        { q: 'Cotxe per minuts.', o: ['Servei nou', 'Mercat nou'], a: 1, e: 'Pagar per ús és un mercat que abans no existia.' },
+        { q: 'La gestoria ofereix als clients un tauler de tresoreria actualitzat.', o: ['Servei nou', 'Mercat nou'], a: 0, e: 'La gestoria ja existia: és un servei nou.' },
+        { q: 'Què fa que un negoci sigui un mercat nou?', o: ['Que faci servir el mòbil', 'Que abans no podia existir sense la tecnologia', 'Que sigui una empresa gran'], a: 1, e: 'És un negoci sencer que la tecnologia ha fet possible.' }
+      ]
+    },
+    p5: {
+      slides: [
+        {
+          h: 'Eficient i sostenible no són el mateix',
+          p: 'Digitalitzar pot ajudar el planeta, però no és automàtic.',
+          cards: [
+            { t: 'Eficient', d: 'Fer el mateix amb menys recursos: energia, temps, material.', ex: 'El clima s\'apaga sol a les habitacions buides.' },
+            { t: 'Sostenible', d: 'Que es pugui mantenir sense malmetre el medi ambient, les persones ni l\'economia.', ex: 'L\'estalvi es manté i es demostra any rere any.' }
+          ]
+        },
+        {
+          h: 'El balanç: estalvi − cost',
+          p: 'Tota tecnologia estalvia alguna cosa i també en gasta. Cal posar les dues columnes.',
+          cards: [
+            { t: 'Estalvia (+)', d: 'Menys energia, menys quilòmetres en buit, menys paper i viatges, menys malbaratament, més reciclatge.' },
+            { t: 'Costa (−)', d: 'Electricitat i aigua dels centres de dades, energia per entrenar la IA, residus electrònics (sensors, tauletes).' },
+            { t: 'Efecte rebot', d: 'Com que una cosa és més barata o fàcil, se\'n consumeix més i l\'estalvi es perd. També va al cost.' }
+          ]
+        },
+        {
+          h: 'Sense indicador, és fum',
+          p: 'La sostenibilitat es demostra amb dades: un valor abans i un valor després.',
+          cards: [
+            { t: 'Té indicador', d: '«Els quilòmetres en buit han passat del 22% al 15%.»' },
+            { t: 'És fum', d: '«Som molt verds perquè som digitals.»' }
+          ],
+          tip: 'Busca un número que es pugui mesurar i comparar. Si no n\'hi ha, és fum.'
+        },
+        {
+          h: 'Sis àmbits on ajuden les THD',
+          compact: true,
+          cards: [
+            { t: 'Energia', d: 'Mesurar i reduir el consum: comptadors, clima intel·ligent.' },
+            { t: 'Transport', d: 'Rutes millors i menys quilòmetres en buit.' },
+            { t: 'Materials', d: 'Menys estoc que caduca; fabricar només sota comanda.' },
+            { t: 'Cadena de fred', d: 'Sondes que vigilen aliments i fàrmacs perquè no es llencin.' },
+            { t: 'Paper i viatges', d: 'Factura electrònica, reunions en línia.' },
+            { t: 'Economia circular', d: 'Reutilitzar, reparar i reciclar més.' }
+          ]
+        }
+      ],
+      worked: [
+        { q: 'Entrenar un model d\'IA', a: 'Costa (−)', why: 'Consumeix molta energia.' },
+        { q: 'Les emissions per comanda han baixat un 12%', a: 'Té indicador', why: 'És una dada mesurable abans i després.' },
+        { q: 'Sondes al remolc frigorífic', a: 'Cadena de fred', why: 'Protegeixen aliments i fàrmacs durant el viatge.' }
+      ],
+      check: [
+        { q: 'Canviar totes les tauletes cada dos anys.', o: ['Estalvia (+)', 'Costa (−)'], a: 1, e: 'Més residus electrònics: cost.' },
+        { q: '«Hem posat sensors: ja som sostenibles.»', o: ['Té indicador', 'És fum'], a: 1, e: 'Tenir sensors no demostra res si no es mesura l\'estalvi.' },
+        { q: 'Què vol dir eficient?', o: ['Fer el mateix amb menys recursos', 'Que no contamina gens', 'Que és digital'], a: 0, e: 'Eficient és fer el mateix amb menys.' }
+      ]
+    },
+    p6: {
+      slides: [
+        {
+          h: 'L\'informe de tecnologies',
+          p: 'L\'informe explica a una empresa quines THD li convenen i per què. Té sempre deu blocs, en aquest ordre. Aquí tens els cinc primers:',
+          cards: [
+            { t: '1 Portada', d: 'Títol, empresa analitzada, cicle, nom i data.' },
+            { t: '2 Objectiu', d: 'Dues o tres línies: què analitzes i per a qui.' },
+            { t: '3 Context de l\'empresa', d: 'Què fa, quina mida té i com de digitalitzada està ara.' },
+            { t: '4 Fitxa de cada tecnologia', d: 'Què és, àrea, problema que resol, què cal tenir abans i riscos.' },
+            { t: '5 Taula de síntesi', d: 'Una fila per tecnologia: àrea · què aporta · prioritat · indicador.' }
+          ]
+        },
+        {
+          h: 'Els cinc blocs següents',
+          cards: [
+            { t: '6 Prioritats justificades', d: 'Ordenar per impacte i esforç i explicar per què les primeres van primer.' },
+            { t: '7 Impacte a IT i OT', d: 'Què canvia a l\'oficina i a la planta i com es connecten.' },
+            { t: '8 Sostenibilitat', d: 'El balanç: què estalvia i què costa.' },
+            { t: '9 Conclusions', d: 'Tres o quatre afirmacions que puguis defensar, no un resum.' },
+            { t: '10 Fonts', d: 'D\'on has tret la informació, amb data, i si has fet servir IA.' }
+          ],
+          tip: 'Per recordar l\'ordre: primer presentes (1-3), després analitzes (4-5), decideixes (6-8) i tanques (9-10). La pregunta que ho resol tot: quin problema d\'aquesta empresa resol cada tecnologia?'
+        }
+      ],
+      worked: [
+        { q: 'Hotel de 120 habitacions; les reserves entren per telèfon i van a un Excel', a: '3 Context de l\'empresa', why: 'Descriu l\'empresa i el seu nivell digital actual.' },
+        { q: 'IoT | Planta | Apaga el clima de les habitacions buides | Alta | kWh per habitació', a: '5 Taula de síntesi', why: 'És una fila: àrea, què aporta, prioritat i indicador.' },
+        { q: 'He fet servir una IA per entendre què és un bessó digital i ho he comprovat als apunts', a: '10 Fonts', why: 'L\'ús de la IA es declara a les fonts.' }
+      ],
+      check: [
+        { q: 'Quin bloc va just després de la taula de síntesi?', o: ['Conclusions', 'Prioritats justificades', 'Fonts'], a: 1, e: 'Després de la taula (5) vénen les prioritats justificades (6).' },
+        { q: '«Tres o quatre afirmacions que puguis defensar.»', o: ['Objectiu', 'Conclusions', 'Context de l\'empresa'], a: 1, e: 'Són les conclusions, no un resum.' },
+        { q: 'On expliques què estalvia i què costa cada tecnologia?', o: ['Sostenibilitat', 'Portada', 'Impacte a IT i OT'], a: 0, e: 'El balanç va al bloc de sostenibilitat (8).' }
+      ]
+    },
+    p7: {
+      slides: [
+        {
+          h: 'Els errors típics',
+          p: 'En Fum ven tecnologia «perquè queda moderna». Aquests són els errors que has de saber detectar:',
+          compact: true,
+          cards: [
+            { t: 'Catàleg sense problemes', d: 'Llistar THD sense dir quin problema resol cadascuna.' },
+            { t: '«Perquè queda modern»', d: 'Posar blockchain o bessó digital sense justificar-ho. Si una sola empresa controla les dades, n\'hi ha prou amb una base de dades.' },
+            { t: 'Molts Excel no són big data', d: 'Big data vol dir volums que no caben en un Excel.' },
+            { t: 'La IA no ho fa tot sola', d: 'Necessita dades bones i supervisió humana. Dades dolentes donen conclusions falses.' },
+            { t: 'Sostenibilitat sense indicador', d: 'Sense una dada abans i després, són bones paraules.' },
+            { t: 'Oblidar la ciberseguretat', d: 'Fa possible tota la resta: no es deixa per al final.' },
+            { t: 'No dir on pesa', d: 'Cal dir si cada tecnologia pesa al negoci, a la planta o a tots dos.' },
+            { t: 'Cobot i RPA no són el mateix', d: 'El cobot és un robot físic; l\'RPA és un robot de programari d\'oficina.' },
+            { t: 'Bessó sense dades', d: 'Sense dades bones, el bessó digital només simula errors.' }
+          ]
+        },
+        {
+          h: 'Com reconèixer una trampa',
+          cards: [
+            { t: 'Desconfia de...', d: '«sempre», «tot sol», «no cal», «ja som», «perquè queda modern».' },
+            { t: 'Una frase certa...', d: 'diu quin problema es resol, dona una dada o reconeix un límit.' }
+          ],
+          tip: 'Si falta el perquè o falta la dada, probablement és fum.'
+        }
+      ],
+      worked: [
+        { q: '«Tenim 40 Excel: ja fem big data.»', a: 'Trampa', why: 'Big data no és tenir molts Excel.' },
+        { q: '«La IA necessita dades bones i una persona que la supervisi.»', a: 'Certa', why: 'Reconeix el límit de la IA.' },
+        { q: '«Digitalitzar sempre és sostenible.»', a: 'Trampa', why: 'Cal fer el balanç entre el que estalvia i el que costa.' }
+      ],
+      check: [
+        { q: '«Si una sola empresa controla les dades, cal blockchain.»', o: ['Certa', 'Trampa'], a: 1, e: 'N\'hi ha prou amb una base de dades normal.' },
+        { q: '«Un cobot i un RPA són el mateix.»', o: ['Certa', 'Trampa'], a: 1, e: 'El cobot és físic; l\'RPA és programari.' },
+        { q: '«Cal dir si cada tecnologia pesa al negoci o a la planta.»', o: ['Certa', 'Trampa'], a: 0, e: 'És el que demana el criteri 2.5.' }
+      ]
+    },
+    p8: {
+      slides: [
+        {
+          h: 'Repàs abans del duel',
+          p: 'En Fum barrejarà frases de totes les plantes. Repassa les idees clau:',
+          compact: true,
+          cards: [
+            { t: 'Negoci o planta', d: 'IT tracta informació; OT actua sobre coses físiques.' },
+            { t: 'Abans → després', d: 'Sempre amb la tecnologia que ho fa possible.' },
+            { t: 'Cinc patrons', d: 'Servitització, personalització massiva, autoservei, predictiu i connectat.' },
+            { t: 'Mercat nou', d: 'Un negoci que abans no podia existir.' },
+            { t: 'Sostenibilitat', d: 'Estalvi − cost, demostrat amb un indicador.' },
+            { t: 'Informe', d: 'Deu blocs, de la portada a les fonts.' },
+            { t: 'Trampes', d: 'Sense perquè o sense dada, és fum.' }
+          ]
+        }
+      ],
+      worked: [],
+      check: [
+        { q: '«Un mercat nou és un negoci que abans no podia existir.»', o: ['És cert', 'És fum'], a: 0, e: 'Cert: la tecnologia el fa possible.' },
+        { q: '«El núvol no contamina.»', o: ['És cert', 'És fum'], a: 1, e: 'Els centres de dades gasten electricitat i aigua.' }
+      ]
+    }
+  },
+
+  es: {
+    p1: {
+      slides: [
+        {
+          h: 'Las 11 tecnologías habilitadoras digitales',
+          p: 'Una THD es una tecnología que permite a una empresa hacer cosas nuevas o hacer mejor las que ya hace. Estudiamos once:',
+          compact: true,
+          cards: [
+            { t: 'IoT', d: 'Objetos y sensores conectados que envían datos solos.' },
+            { t: '5G', d: 'Conexión móvil rápida para muchos aparatos a la vez.' },
+            { t: 'Cloud', d: 'Programas y datos en internet. Pagas por lo que usas.' },
+            { t: 'Big data', d: 'Analizar tantos datos que no caben en un Excel.' },
+            { t: 'IA', d: 'Programas que aprenden de los datos para predecir, reconocer o redactar.' },
+            { t: 'Gemelo digital', d: 'Copia digital de algo real para probar cambios en ella.' },
+            { t: 'Robótica', d: 'Robots y cobots que hacen trabajos físicos.' },
+            { t: 'Impresión 3D', d: 'Fabricar piezas capa a capa, cuando hacen falta.' },
+            { t: 'RA / RV', d: 'Añadir información a lo que ves (RA) o entrar en un espacio simulado (RV).' },
+            { t: 'Ciberseguridad', d: 'Proteger datos, accesos y máquinas.' },
+            { t: 'Blockchain', d: 'Registro compartido entre empresas que nadie puede alterar.' }
+          ]
+        },
+        {
+          h: 'Dos entornos: negocio y planta',
+          p: 'Toda empresa tiene dos partes. Cada tecnología pesa más en una que en la otra.',
+          cards: [
+            { t: 'Negocio (IT)', d: 'La oficina: donde se gestiona información. Ventas, contabilidad, clientes, precios.', ex: 'Un CRM para seguir a los clientes.' },
+            { t: 'Planta (OT)', d: 'Donde pasan las cosas físicas: almacén, cocina del hotel, camión, línea de producción. Se mueve, se mide o se vigila algo.', ex: 'Una sonda de temperatura dentro del camión frigorífico.' },
+            { t: 'Los dos', d: 'Tecnologías que pesan mucho en los dos lados a la vez.', ex: 'La IA responde a clientes (negocio) y detecta piezas defectuosas con una cámara (planta).' }
+          ]
+        },
+        {
+          h: '¿Dónde pesa más cada THD?',
+          cards: [
+            { t: 'Sobre todo negocio', d: 'Cloud, big data y blockchain.' },
+            { t: 'Los dos', d: 'IA, ciberseguridad y gemelo digital.' },
+            { t: 'Sobre todo planta', d: 'IoT, 5G, robótica, impresión 3D y RA / RV.' }
+          ],
+          tip: 'Pregúntate: ¿esta aplicación trata información (negocio) o actúa sobre algo físico (planta)?'
+        }
+      ],
+      worked: [
+        { q: 'Una IA lee las facturas en PDF y un RPA las introduce en el ERP', a: 'Negocio (IT)', why: 'Trata documentos de oficina.' },
+        { q: 'Sensores de vibración en una máquina de la línea', a: 'Planta (OT)', why: 'Vigilan una máquina real.' },
+        { q: 'Doble factor en el correo y red de la planta separada por zonas', a: 'Los dos', why: 'Es ciberseguridad en la oficina y en la planta a la vez.' }
+      ],
+      check: [
+        { q: 'Un robot de almacén lleva la estantería al trabajador.', o: ['Negocio (IT)', 'Los dos', 'Planta (OT)'], a: 2, e: 'Mueve objetos físicos: planta.' },
+        { q: 'Prever las ventas de la campaña de Navidad.', o: ['Negocio (IT)', 'Los dos', 'Planta (OT)'], a: 0, e: 'Prever ventas es una tarea de oficina: negocio.' },
+        { q: '¿Cuál de estas THD pesa mucho en los dos lados?', o: ['Blockchain', 'Gemelo digital', '5G'], a: 1, e: 'El gemelo necesita datos de la planta y sistemas de negocio para decidir.' }
+      ]
+    },
+    p2: {
+      slides: [
+        {
+          h: 'Cómo se explica una mejora',
+          p: 'Una mejora digital siempre tiene tres piezas: cómo se hacía antes, cómo se hace después y qué tecnología lo hace posible.',
+          cards: [
+            { t: 'Antes', d: 'Teclear las facturas a mano.' },
+            { t: 'Después', d: 'La IA las lee y un robot de software (RPA) las introduce en el programa.' },
+            { t: 'Tecnología', d: 'IA + RPA.' }
+          ],
+          tip: 'Si falta una de las tres piezas, la mejora está mal explicada.'
+        },
+        {
+          h: 'Mejoras en el entorno IT (negocio)',
+          cards: [
+            { t: 'Cloud', d: 'Servidores propios → servicios en la nube que crecen cuando hace falta y se pagan por uso. Los programas se pasan los datos solos (API).' },
+            { t: 'Big data', d: 'Un informe a final de mes → indicadores en tiempo real. Decidir analizando millones de tiques.' },
+            { t: 'IA + RPA', d: 'Tareas repetitivas de oficina → la IA lee y el RPA introduce los datos.' },
+            { t: 'IA', d: 'Precios fijos toda la temporada → el precio se recalcula según la demanda. Un chat responde las preguntas frecuentes.' },
+            { t: 'Ciberseguridad', d: 'Contraseñas apuntadas en una hoja → gestor de contraseñas y doble factor.' },
+            { t: 'Blockchain', d: 'Correos y papeles para demostrar el origen de un lote → registro compartido que nadie puede alterar.' }
+          ]
+        },
+        {
+          h: 'Mejoras en el entorno OT (planta)',
+          cards: [
+            { t: 'IoT', d: 'Rondas a pie → sensores que vigilan solos y avisan al móvil.' },
+            { t: 'IoT + IA', d: 'Reparar cuando se estropea → mantenimiento predictivo: reparar antes.' },
+            { t: 'IA', d: 'Revisar a ojo → cámaras que detectan defectos o cuentan palés (visión artificial).' },
+            { t: 'Robótica', d: 'Tareas pesadas a mano → robots y cobots.' },
+            { t: 'Gemelo digital', d: 'Probar los cambios en la planta real → simularlos primero.' },
+            { t: '5G', d: 'Zonas sin buena conexión → conexión fiable en todo el recinto.' }
+          ]
+        },
+        {
+          h: 'En la frontera entre IT y OT',
+          cards: [
+            { t: 'Una sola versión de la verdad', d: 'La oficina y la planta comparten los mismos datos (IoT + edge + gemelo digital).' },
+            { t: 'El MES y el ERP se hablan', d: 'Los datos de la planta llegan al programa de gestión (cloud + IoT).' },
+            { t: 'Redes separadas por zonas', d: 'Conectarlo todo abre puertas a los ataques: ciberseguridad.' },
+            { t: 'Impresión 3D y RA / RV', d: 'Recambios impresos cuando hacen falta; formación y ayuda a distancia con gafas.' }
+          ]
+        }
+      ],
+      worked: [
+        { q: 'Antes: reparar la máquina cuando se estropea', a: 'IoT + IA', why: 'Los sensores dan los datos y la IA predice la avería.' },
+        { q: 'Antes: decidir las ofertas por intuición', a: 'Big data', why: 'Después se decide analizando millones de tiques.' },
+        { q: 'Antes: mover estanterías para probar una nueva distribución', a: 'Gemelo digital', why: 'Se prueba antes en la copia digital del almacén.' }
+      ],
+      check: [
+        { q: 'Antes: apuntar a mano la temperatura de las cámaras. ¿Qué THD lo cambia?', o: ['IoT', 'Blockchain', 'Impresión 3D'], a: 0, e: 'Una sonda conectada que envía el dato y avisa es IoT.' },
+        { q: 'Antes: comprar un servidor nuevo cada vez que crece el trabajo.', o: ['Robótica', 'Cloud', '5G'], a: 1, e: 'Pagar por uso y crecer al momento es la idea de la nube.' },
+        { q: 'Una mejora bien explicada dice...', o: ['Solo el nombre de la tecnología', 'Antes, después y la tecnología que lo hace posible', 'La lista de las 11 THD'], a: 1, e: 'Son las tres piezas de cualquier mejora.' }
+      ]
+    },
+    p3: {
+      slides: [
+        {
+          h: 'Productos y servicios nuevos',
+          p: 'Las THD no solo mejoran lo que ya se hace: permiten vender cosas nuevas. Casi todos los productos y servicios nuevos siguen uno de estos cinco patrones.',
+          cards: [
+            { t: 'Servitización', d: 'Vender el uso o el resultado, no la cosa.', ex: 'Horas de frío garantizadas en lugar de una cámara frigorífica.' },
+            { t: 'Personalización masiva', d: 'A medida de cada cliente, pero a precio de serie.', ex: 'Zapatillas que el cliente diseña en la web.' },
+            { t: 'Autoservicio digital', d: 'El cliente lo hace él mismo, en el móvil o en la web.', ex: 'Registro de entrada en el móvil y llave digital.' },
+            { t: 'Servicio predictivo', d: 'Actuar antes de que pase el problema.', ex: 'El ascensor pide el técnico antes de que falle una pieza.' },
+            { t: 'Producto conectado', d: 'Sigue dando datos después de venderlo.', ex: 'Un contador de agua que envía la lectura solo.' }
+          ]
+        },
+        {
+          h: 'Cómo distinguirlos',
+          p: 'Hazte estas preguntas, por orden:',
+          cards: [
+            { t: '¿Se paga el uso o el resultado?', d: '→ Servitización' },
+            { t: '¿Cada cliente tiene su versión?', d: '→ Personalización masiva' },
+            { t: '¿El cliente lo hace solo, sin nadie?', d: '→ Autoservicio digital' },
+            { t: '¿Se actúa antes de la avería?', d: '→ Servicio predictivo' },
+            { t: '¿El producto envía datos una vez vendido?', d: '→ Producto conectado' }
+          ],
+          tip: 'Predictivo y conectado a menudo van juntos. Si la frase habla de anticiparse, es predictivo. Si habla de los datos que envía el producto, es conectado.'
+        }
+      ],
+      worked: [
+        { q: 'Alquilar la impresora y pagar por página impresa', a: 'Servitización', why: 'Se vende el resultado (páginas), no el aparato.' },
+        { q: 'La flota planifica el cambio de neumáticos antes de que fallen', a: 'Servicio predictivo', why: 'Se repara antes de que pase.' },
+        { q: 'Una bicicleta de alquiler que dice dónde está y cuánta batería le queda', a: 'Producto conectado', why: 'El producto sigue enviando datos.' }
+      ],
+      check: [
+        { q: 'Iluminación como servicio: pagas por la luz, no por las lámparas.', o: ['Servitización', 'Autoservicio digital', 'Producto conectado'], a: 0, e: 'Se vende el resultado (luz): servitización.' },
+        { q: 'Una crema con la fórmula ajustada a tu piel.', o: ['Servicio predictivo', 'Personalización masiva', 'Servitización'], a: 1, e: 'Producto a medida para cada cliente: personalización masiva.' },
+        { q: 'Cajas de autocobro en la tienda.', o: ['Producto conectado', 'Servicio predictivo', 'Autoservicio digital'], a: 2, e: 'El cliente se cobra él mismo: autoservicio digital.' }
+      ]
+    },
+    p4: {
+      slides: [
+        {
+          h: '¿Servicio nuevo o mercado nuevo?',
+          p: 'Son dos cosas diferentes. La clave es mirar si la empresa ya existía.',
+          cards: [
+            { t: 'Producto o servicio nuevo', d: 'Una empresa que ya existía vende algo diferente.', ex: 'El hotel de siempre ofrece registro en el móvil y llave digital.' },
+            { t: 'Mercado nuevo', d: 'Aparece un negocio entero que antes no podía existir porque la tecnología no lo permitía.', ex: 'Plataformas de alojamiento entre particulares (móvil + geolocalización + nube).' }
+          ],
+          tip: 'Pregunta clave: ¿la empresa ya existía y ahora vende otra cosa (servicio nuevo), o el negocio entero es nuevo (mercado nuevo)?'
+        },
+        {
+          h: 'Ocho mercados nuevos',
+          compact: true,
+          cards: [
+            { t: 'Plataformas entre particulares', d: 'Alojamiento, reparto por aplicación.' },
+            { t: 'Suscripción y pago por uso', d: 'Software por meses, coche por minutos.' },
+            { t: 'Economía del dato', d: 'Empresas que venden indicadores y datos de mercado.' },
+            { t: 'Salud digital', d: 'Consulta médica a distancia, control de enfermos desde casa.' },
+            { t: 'Ciberseguridad gestionada', d: 'Vigilar 24 horas la red de otras empresas.' },
+            { t: 'Formación inmersiva', d: 'Simuladores de RV para formar sin riesgos.' },
+            { t: 'Comercio social', d: 'Vender directamente desde las redes con creadores.' },
+            { t: 'Trazabilidad verificable', d: 'Certificar el origen o la huella de carbono con blockchain.' }
+          ]
+        }
+      ],
+      worked: [
+        { q: 'La tienda del barrio abre su tienda en línea', a: 'Servicio nuevo', why: 'La tienda ya existía: es un canal nuevo, no un mercado nuevo.' },
+        { q: 'Empresas que vigilan 24 horas la red de otras empresas', a: 'Mercado nuevo', why: 'Ciberseguridad gestionada: antes no existía.' },
+        { q: 'El fabricante de ascensores avisa antes de la avería', a: 'Servicio nuevo', why: 'El fabricante ya existía y añade un servicio predictivo.' }
+      ],
+      check: [
+        { q: 'Coche por minutos.', o: ['Servicio nuevo', 'Mercado nuevo'], a: 1, e: 'Pagar por uso es un mercado que antes no existía.' },
+        { q: 'La gestoría ofrece a los clientes un panel de tesorería actualizado.', o: ['Servicio nuevo', 'Mercado nuevo'], a: 0, e: 'La gestoría ya existía: es un servicio nuevo.' },
+        { q: '¿Qué hace que un negocio sea un mercado nuevo?', o: ['Que use el móvil', 'Que antes no podía existir sin la tecnología', 'Que sea una empresa grande'], a: 1, e: 'Es un negocio entero que la tecnología ha hecho posible.' }
+      ]
+    },
+    p5: {
+      slides: [
+        {
+          h: 'Eficiente y sostenible no son lo mismo',
+          p: 'Digitalizar puede ayudar al planeta, pero no es automático.',
+          cards: [
+            { t: 'Eficiente', d: 'Hacer lo mismo con menos recursos: energía, tiempo, material.', ex: 'El clima se apaga solo en las habitaciones vacías.' },
+            { t: 'Sostenible', d: 'Que se pueda mantener sin dañar el medio ambiente, las personas ni la economía.', ex: 'El ahorro se mantiene y se demuestra año tras año.' }
+          ]
+        },
+        {
+          h: 'El balance: ahorro − coste',
+          p: 'Toda tecnología ahorra algo y también gasta. Hay que poner las dos columnas.',
+          cards: [
+            { t: 'Ahorra (+)', d: 'Menos energía, menos kilómetros en vacío, menos papel y viajes, menos desperdicio, más reciclaje.' },
+            { t: 'Cuesta (−)', d: 'Electricidad y agua de los centros de datos, energía para entrenar la IA, residuos electrónicos (sensores, tabletas).' },
+            { t: 'Efecto rebote', d: 'Como algo es más barato o fácil, se consume más y el ahorro se pierde. También va al coste.' }
+          ]
+        },
+        {
+          h: 'Sin indicador, es humo',
+          p: 'La sostenibilidad se demuestra con datos: un valor antes y un valor después.',
+          cards: [
+            { t: 'Tiene indicador', d: '«Los kilómetros en vacío han pasado del 22% al 15%.»' },
+            { t: 'Es humo', d: '«Somos muy verdes porque somos digitales.»' }
+          ],
+          tip: 'Busca un número que se pueda medir y comparar. Si no lo hay, es humo.'
+        },
+        {
+          h: 'Seis ámbitos donde ayudan las THD',
+          compact: true,
+          cards: [
+            { t: 'Energía', d: 'Medir y reducir el consumo: contadores, clima inteligente.' },
+            { t: 'Transporte', d: 'Mejores rutas y menos kilómetros en vacío.' },
+            { t: 'Materiales', d: 'Menos stock que caduca; fabricar solo bajo pedido.' },
+            { t: 'Cadena de frío', d: 'Sondas que vigilan alimentos y fármacos para que no se tiren.' },
+            { t: 'Papel y viajes', d: 'Factura electrónica, reuniones en línea.' },
+            { t: 'Economía circular', d: 'Reutilizar, reparar y reciclar más.' }
+          ]
+        }
+      ],
+      worked: [
+        { q: 'Entrenar un modelo de IA', a: 'Cuesta (−)', why: 'Consume mucha energía.' },
+        { q: 'Las emisiones por pedido han bajado un 12%', a: 'Tiene indicador', why: 'Es un dato medible antes y después.' },
+        { q: 'Sondas en el remolque frigorífico', a: 'Cadena de frío', why: 'Protegen alimentos y fármacos durante el viaje.' }
+      ],
+      check: [
+        { q: 'Cambiar todas las tabletas cada dos años.', o: ['Ahorra (+)', 'Cuesta (−)'], a: 1, e: 'Más residuos electrónicos: coste.' },
+        { q: '«Hemos puesto sensores: ya somos sostenibles.»', o: ['Tiene indicador', 'Es humo'], a: 1, e: 'Tener sensores no demuestra nada si no se mide el ahorro.' },
+        { q: '¿Qué quiere decir eficiente?', o: ['Hacer lo mismo con menos recursos', 'Que no contamina nada', 'Que es digital'], a: 0, e: 'Eficiente es hacer lo mismo con menos.' }
+      ]
+    },
+    p6: {
+      slides: [
+        {
+          h: 'El informe de tecnologías',
+          p: 'El informe explica a una empresa qué THD le convienen y por qué. Tiene siempre diez bloques, en este orden. Aquí tienes los cinco primeros:',
+          cards: [
+            { t: '1 Portada', d: 'Título, empresa analizada, ciclo, nombre y fecha.' },
+            { t: '2 Objetivo', d: 'Dos o tres líneas: qué analizas y para quién.' },
+            { t: '3 Contexto de la empresa', d: 'Qué hace, qué tamaño tiene y cómo de digitalizada está ahora.' },
+            { t: '4 Ficha de cada tecnología', d: 'Qué es, área, problema que resuelve, qué hay que tener antes y riesgos.' },
+            { t: '5 Tabla de síntesis', d: 'Una fila por tecnología: área · qué aporta · prioridad · indicador.' }
+          ]
+        },
+        {
+          h: 'Los cinco bloques siguientes',
+          cards: [
+            { t: '6 Prioridades justificadas', d: 'Ordenar por impacto y esfuerzo y explicar por qué las primeras van primero.' },
+            { t: '7 Impacto en IT y OT', d: 'Qué cambia en la oficina y en la planta y cómo se conectan.' },
+            { t: '8 Sostenibilidad', d: 'El balance: qué ahorra y qué cuesta.' },
+            { t: '9 Conclusiones', d: 'Tres o cuatro afirmaciones que puedas defender, no un resumen.' },
+            { t: '10 Fuentes', d: 'De dónde has sacado la información, con fecha, y si has usado IA.' }
+          ],
+          tip: 'Para recordar el orden: primero presentas (1-3), después analizas (4-5), decides (6-8) y cierras (9-10). La pregunta que lo resuelve todo: ¿qué problema de esta empresa resuelve cada tecnología?'
+        }
+      ],
+      worked: [
+        { q: 'Hotel de 120 habitaciones; las reservas entran por teléfono y van a un Excel', a: '3 Contexto de la empresa', why: 'Describe la empresa y su nivel digital actual.' },
+        { q: 'IoT | Planta | Apaga el clima de las habitaciones vacías | Alta | kWh por habitación', a: '5 Tabla de síntesis', why: 'Es una fila: área, qué aporta, prioridad e indicador.' },
+        { q: 'He usado una IA para entender qué es un gemelo digital y lo he comprobado en los apuntes', a: '10 Fuentes', why: 'El uso de la IA se declara en las fuentes.' }
+      ],
+      check: [
+        { q: '¿Qué bloque va justo después de la tabla de síntesis?', o: ['Conclusiones', 'Prioridades justificadas', 'Fuentes'], a: 1, e: 'Después de la tabla (5) vienen las prioridades justificadas (6).' },
+        { q: '«Tres o cuatro afirmaciones que puedas defender.»', o: ['Objetivo', 'Conclusiones', 'Contexto de la empresa'], a: 1, e: 'Son las conclusiones, no un resumen.' },
+        { q: '¿Dónde explicas qué ahorra y qué cuesta cada tecnología?', o: ['Sostenibilidad', 'Portada', 'Impacto en IT y OT'], a: 0, e: 'El balance va en el bloque de sostenibilidad (8).' }
+      ]
+    },
+    p7: {
+      slides: [
+        {
+          h: 'Los errores típicos',
+          p: 'Fum vende tecnología «porque queda moderna». Estos son los errores que tienes que saber detectar:',
+          compact: true,
+          cards: [
+            { t: 'Catálogo sin problemas', d: 'Listar THD sin decir qué problema resuelve cada una.' },
+            { t: '«Porque queda moderno»', d: 'Poner blockchain o gemelo digital sin justificarlo. Si una sola empresa controla los datos, basta con una base de datos.' },
+            { t: 'Muchos Excel no son big data', d: 'Big data quiere decir volúmenes que no caben en un Excel.' },
+            { t: 'La IA no lo hace todo sola', d: 'Necesita datos buenos y supervisión humana. Datos malos dan conclusiones falsas.' },
+            { t: 'Sostenibilidad sin indicador', d: 'Sin un dato antes y después, son buenas palabras.' },
+            { t: 'Olvidar la ciberseguridad', d: 'Hace posible todo lo demás: no se deja para el final.' },
+            { t: 'No decir dónde pesa', d: 'Hay que decir si cada tecnología pesa en el negocio, en la planta o en los dos.' },
+            { t: 'Cobot y RPA no son lo mismo', d: 'El cobot es un robot físico; el RPA es un robot de software de oficina.' },
+            { t: 'Gemelo sin datos', d: 'Sin datos buenos, el gemelo digital solo simula errores.' }
+          ]
+        },
+        {
+          h: 'Cómo reconocer una trampa',
+          cards: [
+            { t: 'Desconfía de...', d: '«siempre», «todo solo», «no hace falta», «ya somos», «porque queda moderno».' },
+            { t: 'Una frase cierta...', d: 'dice qué problema se resuelve, da un dato o reconoce un límite.' }
+          ],
+          tip: 'Si falta el porqué o falta el dato, probablemente es humo.'
+        }
+      ],
+      worked: [
+        { q: '«Tenemos 40 Excel: ya hacemos big data.»', a: 'Trampa', why: 'Big data no es tener muchos Excel.' },
+        { q: '«La IA necesita datos buenos y una persona que la supervise.»', a: 'Cierta', why: 'Reconoce el límite de la IA.' },
+        { q: '«Digitalizar siempre es sostenible.»', a: 'Trampa', why: 'Hay que hacer el balance entre lo que ahorra y lo que cuesta.' }
+      ],
+      check: [
+        { q: '«Si una sola empresa controla los datos, hace falta blockchain.»', o: ['Cierta', 'Trampa'], a: 1, e: 'Basta con una base de datos normal.' },
+        { q: '«Un cobot y un RPA son lo mismo.»', o: ['Cierta', 'Trampa'], a: 1, e: 'El cobot es físico; el RPA es software.' },
+        { q: '«Hay que decir si cada tecnología pesa en el negocio o en la planta.»', o: ['Cierta', 'Trampa'], a: 0, e: 'Es lo que pide el criterio 2.5.' }
+      ]
+    },
+    p8: {
+      slides: [
+        {
+          h: 'Repaso antes del duelo',
+          p: 'Fum mezclará frases de todas las plantas. Repasa las ideas clave:',
+          compact: true,
+          cards: [
+            { t: 'Negocio o planta', d: 'IT trata información; OT actúa sobre cosas físicas.' },
+            { t: 'Antes → después', d: 'Siempre con la tecnología que lo hace posible.' },
+            { t: 'Cinco patrones', d: 'Servitización, personalización masiva, autoservicio, predictivo y conectado.' },
+            { t: 'Mercado nuevo', d: 'Un negocio que antes no podía existir.' },
+            { t: 'Sostenibilidad', d: 'Ahorro − coste, demostrado con un indicador.' },
+            { t: 'Informe', d: 'Diez bloques, de la portada a las fuentes.' },
+            { t: 'Trampas', d: 'Sin porqué o sin dato, es humo.' }
+          ]
+        }
+      ],
+      worked: [],
+      check: [
+        { q: '«Un mercado nuevo es un negocio que antes no podía existir.»', o: ['Es cierto', 'Es humo'], a: 0, e: 'Cierto: la tecnología lo hace posible.' },
+        { q: '«La nube no contamina.»', o: ['Es cierto', 'Es humo'], a: 1, e: 'Los centros de datos gastan electricidad y agua.' }
+      ]
+    }
   }
 };
 
@@ -1465,7 +2192,7 @@ function setLang(l, opts = {}) {
   if (S) { S.lang = LANG; save(); }
   if (!opts.silent) {
     if (screen === 'map') renderMap();
-    else if (screen === 'intro' && introIdx != null) openIntro(introIdx);
+    else if (screen === 'intro' && introIdx != null) openIntro(introIdx, LS ? LS.k : 0);
     else if (screen === 'start') refreshContinue();
   }
 }
@@ -1583,19 +2310,85 @@ function renderMap() {
 }
 
 const CONTROL_KEYS = { sort: 'kSort', shoot: 'kShoot', snake: 'kSnake', whack: 'kWhack', boss: 'kBoss' };
-function openIntro(i) {
+// Lliçó de teoria abans de cada planta: diapositives, exemples resolts, comprova-ho i «a punt»
+let LS = null;
+function lessonSteps(f) {
+  const L = (LESSONS[LANG] || LESSONS.ca)[f.id];
+  const st = [];
+  if (L) {
+    L.slides.forEach(s => st.push({ type: 'slide', s }));
+    if (L.worked && L.worked.length) st.push({ type: 'worked', w: L.worked });
+    if (L.check && L.check.length) st.push({ type: 'check', c: L.check });
+  }
+  st.push({ type: 'ready' });
+  return st;
+}
+function openIntro(i, k) {
   const f = FLOORS[i]; introIdx = i;
+  const steps = lessonSteps(f);
+  const keep = LS && LS.i === i;
+  LS = { i, steps, k: clamp(k == null ? 0 : k, 0, steps.length - 1), ans: keep ? LS.ans : {} };
   $('#intro-chip').textContent = floorName(f);
   $('#intro-ca').textContent = `${f.apt} · ${T('caShort')} ${f.ca}`;
   $('#t-intro').textContent = f.title;
-  $('#intro-tag').textContent = f.tagline;
-  $('#intro-recap').innerHTML = f.recap.map(r => `<li>${esc(r)}</li>`).join('');
-  $('#intro-keys').innerHTML = T(CONTROL_KEYS[f.mode]).map(k => `<div><kbd>${esc(k[0])}</kbd></div><div>${esc(k[1])}</div>`).join('') +
-    `<div><kbd>P</kbd></div><div>${T('kPause')}</div>`;
   $('#b-intro-go').onclick = () => startFloor(i);
   show('intro');
-  $('#b-intro-go').focus();
+  renderLesson(true);
 }
+function lessonGo(d) {
+  if (!LS) return;
+  const k = LS.k + d;
+  if (k < 0 || k >= LS.steps.length) return;
+  LS.k = k; renderLesson(true); window.scrollTo(0, 0);
+}
+function renderLesson(focus) {
+  const f = FLOORS[LS.i], step = LS.steps[LS.k], n = LS.steps.length, last = LS.k === n - 1;
+  $('#ls-step').textContent = T('lsStep', { n: LS.k + 1, m: n });
+  $('#ls-dots').innerHTML = LS.steps.map((s, j) => `<span class="${j === LS.k ? 'on' : j < LS.k ? 'done' : ''}"></span>`).join('');
+  let h = '';
+  if (step.type === 'slide') {
+    const s = step.s;
+    h = `<h2>${esc(s.h)}</h2>${s.p ? `<p class="lead">${esc(s.p)}</p>` : ''}<div class="lcards${s.compact ? ' compact' : ''}">` +
+      s.cards.map(c => `<div class="lcard"><div class="ct">${esc(c.t)}</div><div class="cd">${esc(c.d)}</div>${c.ex ? `<div class="cx"><b>${T('lsEx')}</b> ${esc(c.ex)}</div>` : ''}</div>`).join('') +
+      '</div>' + (s.tip ? `<div class="tip"><b>${T('lsTip')}</b> ${esc(s.tip)}</div>` : '');
+  } else if (step.type === 'worked') {
+    h = `<h2>${T('lsWorkedH')}</h2><p class="lead">${T('lsWorkedP')}</p><div class="worked">` +
+      step.w.map(w => `<div class="wk"><div class="wq">${esc(w.q)}</div><div class="wa">→ <b>${esc(w.a)}</b></div><div class="ww">${esc(w.why)}</div></div>`).join('') + '</div>';
+  } else if (step.type === 'check') {
+    h = `<h2>${T('lsCheckH')}</h2><p class="lead">${T('lsCheckP')}</p>` + step.c.map((c, qi) => {
+      const a = LS.ans[qi], done = a != null;
+      return `<div class="chk" data-q="${qi}"><div class="cq">${qi + 1}. ${esc(c.q)}</div><div class="opts">` +
+        c.o.map((o, oi) => `<button type="button" class="opt${done ? (oi === c.a ? ' ok' : oi === a ? ' ko' : '') : ''}" data-o="${oi}"${done ? ' disabled' : ''}>${esc(o)}</button>`).join('') +
+        `</div>${done ? `<div class="fb ${a === c.a ? 'ok' : 'ko'}"><b>${a === c.a ? T('lsRight') : T('lsWrong')}</b> ${esc(c.e)}</div>` : ''}</div>`;
+    }).join('');
+  } else {
+    h = `<h2>${T('lsReadyH')}</h2><p class="lead">${esc(f.tagline)}</p>` +
+      `<div class="sub"><h3>${T('recall')}</h3><ul class="recap">${f.recap.map(r => `<li>${esc(r)}</li>`).join('')}</ul></div>` +
+      `<div class="sub"><h3>${T('controls')}</h3><div class="keys">${T(CONTROL_KEYS[f.mode]).map(k => `<div><kbd>${esc(k[0])}</kbd></div><div>${esc(k[1])}</div>`).join('')}<div><kbd>P</kbd></div><div>${T('kPause')}</div></div></div>`;
+    const st = S.floors[f.id];
+    if (!st.lesson) { st.lesson = true; save(); }
+  }
+  const body = $('#ls-body');
+  body.innerHTML = h;
+  body.querySelectorAll('.chk .opt').forEach(b => b.addEventListener('click', () => {
+    const qi = +b.closest('.chk').dataset.q; LS.ans[qi] = +b.dataset.o;
+    renderLesson(false);
+    const nb = $(`#ls-body .chk[data-q="${qi + 1}"] .opt`); (nb || $('#b-ls-next')).focus();
+  }));
+  const pending = step.type === 'check' && step.c.some((c, qi) => LS.ans[qi] == null);
+  $('#b-ls-prev').hidden = LS.k === 0;
+  $('#b-ls-next').hidden = last; $('#b-ls-next').disabled = pending;
+  $('#b-intro-go').hidden = !last;
+  $('#b-ls-skip').hidden = last || !S.floors[f.id].lesson;
+  $('#ls-note').textContent = pending ? T('lsAnswerAll') : '';
+  if (focus) {
+    const tgt = last ? $('#b-intro-go') : step.type === 'check' && pending ? body.querySelector('.opt:not([disabled])') : $('#b-ls-next');
+    if (tgt) tgt.focus();
+  }
+}
+$('#b-ls-next').addEventListener('click', () => lessonGo(1));
+$('#b-ls-prev').addEventListener('click', () => lessonGo(-1));
+$('#b-ls-skip').addEventListener('click', () => { if (LS) { LS.k = LS.steps.length - 1; renderLesson(true); window.scrollTo(0, 0); } });
 
 /* ═══════════════ Finestra modal ═══════════════ */
 const OV = { open: false, primary: null };
@@ -2107,6 +2900,11 @@ function pauseGame() {
 document.addEventListener('keydown', e => {
   if (OV.open) {
     if ((e.key === 'Enter' || e.key === ' ') && OV.primary && document.activeElement?.tagName !== 'BUTTON') { e.preventDefault(); OV.primary.click(); }
+    return;
+  }
+  if (screen === 'intro' && LS && !e.altKey && !e.ctrlKey && !e.metaKey) {
+    if (e.key === 'ArrowRight' && !$('#b-ls-next').hidden && !$('#b-ls-next').disabled) { e.preventDefault(); lessonGo(1); }
+    else if (e.key === 'ArrowLeft' && LS.k > 0) { e.preventDefault(); lessonGo(-1); }
     return;
   }
   if (screen !== 'game' || !R) return;
